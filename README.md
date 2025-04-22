@@ -1,5 +1,5 @@
 # Slimy-
-C'est loufemz qui a eu l'idée
+C'est LouFemz qui a eu l'idée
 
 
 Idée du jeu :
