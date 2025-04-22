@@ -10,7 +10,9 @@ Le joueurs peut se déplacer dans toute les directions, peut sauter et tiré un 
 
 Bon courage à nous.
 
-Les différentes étapes à suivre pour créer le jeu !! /n
+Les différentes étapes à suivre pour créer le jeu !! 
+
+
 étapes 1 //
    Créer un personnage qui peut se déplacer tranquillement et qui a une physique propre.
 
