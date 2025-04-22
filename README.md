@@ -9,3 +9,16 @@ Au bout d'un certain temps le niveau se bloque et un boss apparait, si le joueur
 Le joueurs peut se déplacer dans toute les directions, peut sauter et tiré un petit projectile.
 
 Bon courage à nous.
+
+Les différentes étapes à suivre pour créer le jeu !! 
+étapes 1 //
+   Créer un personnage qui peut se déplacer tranquillement et qui a une physique propre.
+
+étapes 2 // 
+  Avoir des "niveaux" que le joueurs pourra traverser.
+
+étapes 3 // 
+  Faire s'arrêter le jeu et lancer un combat de boss épique 
+
+étapes 4 // 
+  Faire un HUD pofiner et un écran de démarrage etc...
