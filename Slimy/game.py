@@ -19,6 +19,7 @@ class Couleurs():
     """
     fond = (150,207,255)
     terre = (150,90,20)
+    slime = (255,110,110)
 
 
     def color(c):
@@ -44,6 +45,12 @@ def draw():
 	rect = Rect((500,800),(300,60))
 	draw_levels()
 	screen.draw.filled_rect(rect,(Couleurs.terre))
+	draw_player()
+
+def draw_player():
+	x = player.pos[0]
+	y = player.pos[1]
+	screen.draw.filled_circle((x,y),50,Couleurs.slime)
 
 def draw_levels():
 	"""
