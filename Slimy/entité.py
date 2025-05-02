@@ -1,7 +1,7 @@
 
 
 class Joueur:
-	def __init__(pv = 100, att = 1, spd = 1, head = None, body = None, first_arm = None, second_arm = None, first_leg = None, second_leg = None, etat = None, pos):
+	def __init__(self, pos, pv = 100, att = 1, spd = 1, head = None, body = None, first_arm = None, second_arm = None, first_leg = None, second_leg = None, etat = None):
 		self.pv = pv
 		self.att = att
 		self.spd = spd
@@ -15,7 +15,7 @@ class Joueur:
 		self.pos = pos
 
 class Ennemie:
-	def __init__(pv = 100, att_dist = 1, att_cac = 1, pos):
+	def __init__(self, pos, pv = 100, att_dist = 1, att_cac = 1):
 		self.pv = pv
 		self.att_dist = att_dist
 		self.att_cac = att_cac
@@ -23,7 +23,7 @@ class Ennemie:
 
 
 class Boss:
-	def __init__(name, pv = 100, att_dist = 1, att_cac = 1, pos, loot):
+	def __init__(self, pos, loot, name, pv = 100, att_dist = 1, att_cac = 1):
 		self.name = name
 		self.pv = pv
 		self.att_dist = att_dist
