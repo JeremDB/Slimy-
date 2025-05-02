@@ -1,0 +1,69 @@
+import os
+import sys
+import pgzrun
+import pygame
+from random import randint, choice
+
+WIDTH = 1920
+HEIGHT = 1080
+TITLE = "Slimy!"
+
+class Couleurs():
+    """
+    Propose une méthode permettant de renvoyer une couleur aléatoire
+    Contient les constantes des couleurs utilisés
+    """
+    fond = (150,207,255)
+    terre = (150,90,20)
+
+
+
+    @staticmethod
+    def random() -> tuple:
+        """
+        Renvoie une couleur aléatoire au format (R,G,B)
+        """
+        return (randint(0,255),randint(0,255),randint(0,255))
+
+def update():
+	"""
+	"""
+	check_keys()
+
+def draw():
+	"""
+	"""
+	screen.fill(Couleurs.fond)
+	rect = Rect((500,800),(300,60))
+	screen.draw.filled_rect(rect,(Couleurs.terre))
+
+def draw_levels():
+	"""
+	"""
+	for lvl in levels :
+		for decor in lvl.get_decors():
+			draw_decor(decor)
+
+def draw_decor():
+	topleft = decor.get_pos()
+	largeur = decor.get_largeur()
+	hauteur = decor.get_hauteur()
+	couleur = Couleurs.decor.couleur()
+	rect_decor = Rect(topleft,(largeur,hauteur))
+	screen.draw.filled_rect(rect_decor,couleur)
+
+def check_keys():
+    """
+    Verifie les touches enfoncée 
+    Echap pour quitter le jeu
+    """
+
+    # Echap pour quitter le jeu
+    if keyboard.ESCAPE:
+        exit()
+
+
+
+
+os.environ['SDL_VIDEO_CENTERED'] = '1'
+pgzrun.go()
