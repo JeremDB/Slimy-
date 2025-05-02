@@ -37,9 +37,29 @@ def update():
 	"""
 	"""
 	check_keys()
+	if check_collisisons_down() == False:
+		gravite()
 
-def collisisons():
-	pass
+def check_collisisons_down():
+	global force_gravitationnel
+	x = player.pos[0]
+	y = player.pos[1] + force_gravitationnel
+	rect_player = Rect((x,y),(50,40))
+	for lvl in levels :
+		for decor in lvl.get_decors():
+			v = decor.get_pos()[0]
+			w = decor.get_pos()[1]
+			largeur = decor.get_largeur()
+			hauteur = decor.get_hauteur()
+			rect_decor = Rect((v,w),(largeur,hauteur))
+			return pygame.Rect.colliderect(rect_player,rect_decor)
+
+
+def gravite():
+	global force_gravitationnel
+	player.pos[1] += force_gravitationnel 
+
+
 
 def draw():
 	"""
@@ -80,9 +100,12 @@ def check_keys():
     # Echap pour quitter le jeu
     if keyboard.ESCAPE:
         exit()
+    if keyboard.SPACE:
+    	player.pos[1] -= 100
 
 levels = [level.lvl]
 player = entite.Joueur([50,660])
+force_gravitationnel = 10
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 pgzrun.go()
