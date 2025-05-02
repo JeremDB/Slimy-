@@ -2,6 +2,7 @@ import os
 import sys
 import pgzrun
 import pygame
+import level
 from random import randint, choice
 
 WIDTH = 1920
@@ -17,6 +18,9 @@ class Couleurs():
     terre = (150,90,20)
 
 
+    def color(c):
+    	if c == "terre":
+    		return Couleurs.terre
 
     @staticmethod
     def random() -> tuple:
@@ -35,6 +39,7 @@ def draw():
 	"""
 	screen.fill(Couleurs.fond)
 	rect = Rect((500,800),(300,60))
+	draw_levels()
 	screen.draw.filled_rect(rect,(Couleurs.terre))
 
 def draw_levels():
@@ -44,11 +49,11 @@ def draw_levels():
 		for decor in lvl.get_decors():
 			draw_decor(decor)
 
-def draw_decor():
+def draw_decor(decor):
 	topleft = decor.get_pos()
 	largeur = decor.get_largeur()
 	hauteur = decor.get_hauteur()
-	couleur = Couleurs.decor.couleur()
+	couleur = Couleurs.color(decor.couleur())
 	rect_decor = Rect(topleft,(largeur,hauteur))
 	screen.draw.filled_rect(rect_decor,couleur)
 
@@ -62,7 +67,7 @@ def check_keys():
     if keyboard.ESCAPE:
         exit()
 
-
+levels = [level.lvl]
 
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
