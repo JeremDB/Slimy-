@@ -38,6 +38,9 @@ def update():
 	"""
 	check_keys()
 
+def collisisons():
+	pass
+
 def draw():
 	"""
 	"""
@@ -50,7 +53,8 @@ def draw():
 def draw_player():
 	x = player.pos[0]
 	y = player.pos[1]
-	screen.draw.filled_circle((x,y),50,Couleurs.slime)
+	rect = Rect((x,y),(50,40))
+	screen.draw.filled_rect(rect,Couleurs.slime)
 
 def draw_levels():
 	"""
@@ -78,7 +82,7 @@ def check_keys():
         exit()
 
 levels = [level.lvl]
-player = entite.Joueur([0,0])
+player = entite.Joueur([50,660])
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 pgzrun.go()
