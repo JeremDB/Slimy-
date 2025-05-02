@@ -1,9 +1,12 @@
+
 import os
 import sys
 import pgzrun
 import pygame
 import level
 from random import randint, choice
+import entite
+
 
 WIDTH = 1920
 HEIGHT = 1080
@@ -68,7 +71,7 @@ def check_keys():
         exit()
 
 levels = [level.lvl]
-
+player = entite.Joueur([0,0])
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 pgzrun.go()
