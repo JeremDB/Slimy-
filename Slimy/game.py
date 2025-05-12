@@ -64,7 +64,7 @@ def update():
 
 def scrolling():
     for lvl in levels :
-        lvl.scroll(5)       
+        lvl.scroll(2)       
 
     
 def check_collisisons_down():
