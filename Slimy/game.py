@@ -34,12 +34,18 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame
+    global force_gravite, w, count_frame,levels,stage
     """
     """
     count_frame += 1
 
     check_keys()
+
+    if stage <= level.nb_niveau +1  :
+        scrolling()
+    if levels[1].get_decors()[0].get_pos()[0] <= 0 :
+        if stage < level.nb_niveau :
+            level.ajuste_niveaux(levels)
 
     if player.etat == "saut":
         gravite()
@@ -49,6 +55,10 @@ def update():
     if check_collisisons_down() == w:
         player.pos[1] = w - hauteur_player
         player.etat = None
+
+def scrolling():
+    for lvl in levels :
+        lvl.scroll(5)       
 
     
 def check_collisisons_down():
@@ -65,7 +75,7 @@ def check_collisisons_down():
             rect_decor = Rect((v,w),(largeur,hauteur))
             if pygame.Rect.colliderect(rect_player,rect_decor):
                 return w
-        return -1
+    return -1
 
 def gravite():
     global force_gravite
@@ -82,9 +92,7 @@ def draw():
     """
     """
     screen.fill(Couleurs.fond)
-    rect = Rect((500,800),(300,60))
     draw_levels()
-    screen.draw.filled_rect(rect,(Couleurs.terre))
     draw_player()
 
 def draw_player():
@@ -129,13 +137,14 @@ def check_keys():
     if keyboard.Q:
         player.pos[0] -= 5
 
-levels = [level.lvl]
+levels = level.init_niveau()
 player = entite.Joueur([50,660])
-gravity = 1
+gravity = 2
 force_gravite = -1 
 hauteur_player = 40
 w = 0
 count_frame = 0
+stage = 1
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 pgzrun.go()
