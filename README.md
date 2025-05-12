@@ -15,6 +15,7 @@ Les différentes étapes à suivre pour créer le jeu !!
 
 étapes 1 //
    Créer un personnage qui peut se déplacer tranquillement et qui a une physique propre.
+   
       - Louis : A fait le personnage, ses déplacement et la physique du jeu. A aussi fait quelque collisions 
 
       - Sarah : A aider Louis pour la physique et a créé les projectiles du personnages 
@@ -24,6 +25,7 @@ Les différentes étapes à suivre pour créer le jeu !!
 
 étapes 2 // 
   Avoir des "niveaux" que le joueurs pourra traverser.
+  
      - Jérémie : A créé un editeur de niveau et a permis de les Draw() 
 
 étapes 3 // 
