@@ -31,5 +31,11 @@ class Boss:
 		self.pos = pos
 		self.loot = None
 
+class Projectil:
+
+	def __init__(self, pos, spd = 1):
+		self.pos = pos
+		self.spd = spd 
+
 
 
