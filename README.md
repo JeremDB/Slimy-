@@ -18,7 +18,7 @@ Les différentes étapes à suivre pour créer le jeu !!
    
       - Louis : A fait le personnage, ses déplacement et la physique du jeu. A aussi fait quelque collisions 
 
-      - Sarah : A aider Louis pour la physique et a créé les projectiles du personnages 
+      - Sarah : A aider Louis pour la physique et a créé les projectiles du personnage
 
       
       
