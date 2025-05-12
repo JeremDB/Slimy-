@@ -1,4 +1,5 @@
-
+from random import randint
+from copy import deepcopy
 
 class Decors:
 
@@ -22,7 +23,7 @@ class Decors:
 		return self.__couleur
 
 	def scroll(self, n):
-		return [self.__x + n, self.__y]
+		self.__x -= n
 
 	def __repr__(self):
 		return f"{self.__x,self.__y,self.__largeur,self.__hauteur,self.__couleur}"
@@ -39,37 +40,52 @@ class Levels:
 	def add_decor(self,decor):
 		self.decors.append(decor)
 
+	def scroll(self,n):
+		for decor in self.decors:
+			decor.scroll(n)
+
+	def decalage(self):
+		for decor in self.decors :
+			decor.scroll(-1920)
+
+niveau1 = Levels([Decors(0, 700, 80, 380, 'terre'),Decors(1840, 700, 80, 380, 'terre'),Decors(80, 700, 880, 380, 'terre'),Decors(320, 560, 320, 20, 'terre'),Decors(960, 700, 400, 380, 'terre'),Decors(1280, 620, 320, 480, 'terre'),Decors(1440, 580, 280, 520, 'terre'),Decors(640, 480, 240, 20, 'terre'),Decors(960, 440, 160, 20, 'terre'),Decors(1200, 360, 160, 20, 'terre')])
+	
+
 niveaux = [
-	Levels([Decors(0, 700, 80, 380, 'terre'),Decors(1840, 700, 80, 380, 'terre'),Decors(80, 700, 880, 380, 'terre'),Decors(320, 560, 320, 20, 'terre'),Decors(960, 700, 400, 380, 'terre'),Decors(1280, 620, 320, 480, 'terre'),Decors(1440, 580, 280, 520, 'terre'),Decors(640, 480, 240, 20, 'terre'),Decors(960, 440, 160, 20, 'terre'),Decors(1200, 360, 160, 20, 'terre')])
+	Levels([Decors(0, 700, 80, 380, 'terre'),Decors(1840, 700, 80, 380, 'terre'),Decors(0, 700, 400, 420, 'terre'),Decors(880, 700, 480, 380, 'terre'),Decors(320, 860, 240, 20, 'terre'),Decors(640, 800, 160, 20, 'terre'),Decors(800, 740, 160, 20, 'terre'),Decors(1360, 840, 160, 20, 'terre'),Decors(1520, 780, 80, 20, 'terre'),Decors(1680, 740, 160, 20, 'terre'),Decors(320, 520, 240, 20, 'terre'),Decors(640, 460, 240, 20, 'terre'),Decors(960, 380, 240, 20, 'terre'),Decors(1360, 360, 240, 20, 'terre')]),
+	Levels([Decors(0, 700, 80, 380, 'terre'),Decors(1840, 700, 80, 380, 'terre'),Decors(80, 700, 480, 480, 'terre'),Decors(240, 580, 480, 480, 'terre'),Decors(640, 620, 400, 480, 'terre'),Decors(1040, 800, 320, 300, 'terre'),Decors(960, 700, 160, 400, 'terre'),Decors(1440, 780, 160, 20, 'terre'),Decors(1680, 780, 160, 20, 'terre'),Decors(960, 740, 240, 600, 'terre'),Decors(380, 540, 480, 600, 'terre'),Decors(420,560,200,600, 'terre')])
 	]
+
+def init_niveau():
+	niv2 = deepcopy(niveaux[randint(0,len(niveaux)-1)])
+	niv2.decalage()
+	return [niveau1, niv2]
+
+def ajuste_niveaux(levels):
+	nouveau = deepcopy(niveaux[randint(0,len(niveaux)-1)])
+	nouveau.decalage()
+	levels.append(nouveau)
+	levels.pop(0)
+	return levels
+
+
 
 nouveau_lvl = [
 Levels([Decors(0, 700, 80, 380, 'terre'),
 Decors(1840, 700, 80, 380, 'terre'),
-Decors(400, 680, 240, 380, 'terre'),
-Decors(880, 700, 160, 360, 'terre'),
-Decors(560, 540, 480, 0, 'terre'),
-Decors(560, 540, 480, 0, 'terre'),
-Decors(560, 480, 320, 120, 'terre'),
-Decors(160, 500, 320, 60, 'terre'),
-Decors(1120, 700, 480, 20, 'terre'),
-Decors(1200, 940, 400, 60, 'terre')])
+Decors(-80, 640, 560, 480, 'terre'),
+Decors(240, 580, 480, 480, 'terre'),
+Decors(640, 620, 400, 480, 'terre'),
+Decors(1040, 800, 320, 300, 'terre'),
+Decors(960, 700, 160, 400, 'terre'),
+Decors(1440, 780, 160, 20, 'terre'),
+Decors(1680, 780, 160, 20, 'terre'),
+Decors(960, 740, 240, 600, 'terre'),
+Decors(380, 540, 480, 600, 'terre'),
+Decors(420,560,200,600, 'terre')
+	])
 	]
-
+nb_niveau = len(niveaux)
 decors_de_base = [Decors(0,700,80,380,"terre"),Decors(1840,700,80,380,"terre")]
 niveau_vide = [Levels(decors_de_base)]
 
-"""
-dico = [{'x': 78, 'y': 705, 'largeur': 250, 'hauteur': 374}, {'x': 554, 'y': 717, 'largeur': 212, 'hauteur': 362}, {'x': 1018, 'y': 727, 'largeur': 151, 'hauteur': 352}, {'x': 647, 'y': 561, 'largeur': 417, 'hauteur': -4}, {'x': 647, 'y': 561, 'largeur': 417, 'hauteur': -4}, {'x': 716, 'y': 509, 'largeur': 314, 'hauteur': 107}, {'x': 281, 'y': 529, 'largeur': 284, 'hauteur': 58}, {'x': 1243, 'y': 735, 'largeur': 412, 'hauteur': 6}, {'x': 1280, 'y': 965, 'largeur': 399, 'hauteur': 49}, {'x': 537, 'y': 390, 'largeur': 1142, 'hauteur': 624}]
-
-for decor in dico:	
-	decor["x"] = ((decor["x"] // 80) - 1) * 80
-	decor["y"] = ((decor["y"] // 20) - 1) * 20	
-	decor["largeur"] = ((decor["largeur"] // 80) + 1) * 80
-	decor["hauteur"] = ((decor["hauteur"] // 20) + 1) * 20
-	decors_de_base.append(Decors(decor["x"], decor["y"],decor["largeur"],decor["hauteur"],"terre"))
-
-for decor in decors_de_base : 
-	print(f"Decors{decor},")
-
-"""
