@@ -89,9 +89,26 @@ def check_keys():
         bottomright = None
     # Echap pour quitter le jeu
     if keyboard.ESCAPE:
-        print(decors)
+        liste_decors()
         exit()
 
+
+def liste_decors() :
+    nouveau_decors = [level.Decors(0,700,80,380,"terre"),level.Decors(1840,700,80,380,"terre")]
+    for decor in decors :  
+        decor["x"] = ((decor["x"] // 80) - 1) * 80
+        decor["y"] = ((decor["y"] // 20) - 1) * 20  
+        decor["largeur"] = ((decor["largeur"] // 80) + 1) * 80
+        decor["hauteur"] = ((decor["hauteur"] // 20) + 1) * 20
+        nouveau_decors.append(level.Decors(decor["x"], decor["y"],decor["largeur"],decor["hauteur"],"terre"))
+
+    for decor in nouveau_decors : 
+        print(f"Decors{decor},")
+
+
+
+
+#levels = level.niveau_vide
 levels = level.nouveau_lvl
 topleft = None
 bottomright = None
