@@ -42,20 +42,38 @@ def update():
 
     check_keys()
 
-    if stage <= level.nb_niveau +1  :
+    if stage <= level.nb_niveau +1:
         scrolling()
+        if check_collisisons_droite() == v :
+            player.pos[0] = v - largeur_player
     if levels[1].get_decors()[0].get_pos()[0] <= 0 :
         if stage < level.nb_niveau :
             level.ajuste_niveaux(levels)
 
     if player.etat == "saut":
         gravite()
-    if check_collisisons_down() == -1:
+    if check_collisisons_down() == -1 : #Ne touche pas le sol
         calc_speed()
         gravite()
-    if check_collisisons_down() == w:
-        player.pos[1] = w - hauteur_player
-        player.etat = None
+    if check_collisisons_top() == -1: #Ne touche pas le bas d'un décor
+        if check_collisisons_down() == w: # si tu touche le haut d'un décor
+            player.pos[1] = w - hauteur_player
+            player.etat = "sol"
+            
+            
+    if check_collisisons_top() == w and player.etat == "saut" : # Si tu touche le bas du décor
+        player.pos[1] = w
+        player.etat = "air"
+        force_gravite = -0.2
+        gravite()
+        print(check_collisisons_down())
+        
+
+
+
+
+
+
     if a_tire == True:
         move_projectil()
     if count_frame2 >= 5 :
@@ -66,7 +84,7 @@ def scrolling():
     for lvl in levels :
         lvl.scroll(2)       
 
-    
+
 def check_collisisons_down():
     global w 
     x = player.pos[0]
@@ -79,9 +97,58 @@ def check_collisisons_down():
             largeur = decor.get_largeur()
             hauteur = decor.get_hauteur()
             rect_decor = Rect((v,w),(largeur,hauteur))
+            if pygame.Rect.colliderect(rect_player,rect_decor) and y < w:
+                return w
+    return -1
+
+def check_collisisons_top():
+    global w 
+    x = player.pos[0]
+    y = player.pos[1] - force_gravite
+    rect_player = Rect((x,y),(50,40))
+    for lvl in levels :
+        for decor in lvl.get_decors():
+            v = decor.get_pos()[0]
+            w = decor.get_pos()[1] + decor.get_hauteur()
+            largeur = decor.get_largeur()
+            hauteur = decor.get_hauteur()
+            rect_decor = Rect((v,w),(largeur,hauteur))
             if pygame.Rect.colliderect(rect_player,rect_decor):
                 return w
     return -1
+
+def check_collisisons_droite():
+    global v
+    x = player.pos[0]
+    y = player.pos[1] 
+    rect_player = Rect((x,y),(50,40))
+    for lvl in levels :
+        for decor in lvl.get_decors():
+            v = decor.get_pos()[0]
+            w = decor.get_pos()[1]
+            largeur = decor.get_largeur()
+            hauteur = decor.get_hauteur()
+            rect_decor = Rect((v,w),(largeur,hauteur))
+            if pygame.Rect.colliderect(rect_player,rect_decor):
+                return v
+    return -1
+
+def check_collisisons_gauche():
+    global v
+    x = player.pos[0] - 5
+    y = player.pos[1] 
+    rect_player = Rect((x,y),(50,40))
+    for lvl in levels :
+        for decor in lvl.get_decors():
+            v = decor.get_pos()[0] + decor.get_largeur()
+            w = decor.get_pos()[1]
+            largeur = decor.get_largeur()
+            hauteur = decor.get_hauteur()
+            rect_decor = Rect((v,w),(largeur,hauteur))
+            if pygame.Rect.colliderect(rect_player,rect_decor):
+                return v
+    return -1
+
 
 def gravite():
     global force_gravite
@@ -105,7 +172,7 @@ def draw():
 def draw_player():
     x = player.pos[0]
     y = player.pos[1]
-    rect = Rect((x,y),(50,hauteur_player))
+    rect = Rect((x,y),(largeur_player,hauteur_player))
     screen.draw.filled_rect(rect,Couleurs.slime)
 
 def draw_projectil():
@@ -161,7 +228,7 @@ def check_keys():
     if keyboard.ESCAPE:
         exit()
     if keyboard.SPACE:
-        if count_frame > 10 and player.etat != "saut":
+        if count_frame > 10 and player.etat == "sol":
             force_gravite = -1
             player.etat = "saut"
             force_gravite -= 4
@@ -169,14 +236,16 @@ def check_keys():
     if keyboard.D:
         player.pos[0] += 5
     if keyboard.Q:
-        player.pos[0] -= 5
+        player.pos[0] -=5
 
 levels = level.init_niveau()
 player = entite.Joueur([50,660])
 gravity = 2
 force_gravite = -1 
 hauteur_player = 40
+largeur_player = 50
 w = 0
+v = 0
 count_frame2 = 0
 count_frame = 0
 stage = 1
