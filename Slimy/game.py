@@ -35,7 +35,7 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame,levels,stage, a_tire
+    global force_gravite, w, count_frame,levels,stage, a_tire, count_frame2
     """
     """
     count_frame += 1
@@ -57,10 +57,10 @@ def update():
         player.pos[1] = w - hauteur_player
         player.etat = None
     if a_tire == True:
-		move_projectil()
-	if count_frame >= 5 :
-		count_frame = 0
-	count_frame += 1
+        move_projectil()
+    if count_frame2 >= 5 :
+        count_frame2 = 0
+    count_frame2 += 1
 
 def scrolling():
     for lvl in levels :
@@ -109,13 +109,13 @@ def draw_player():
     screen.draw.filled_rect(rect,Couleurs.slime)
 
 def draw_projectil():
-	global liste_tirs
-	for tirs in liste_tirs:
-		print(tirs)
-		x = tirs[0]
-		y = tirs[1] 
-		rect = Rect((x,y),(15,15))
-		screen.draw.filled_rect(rect, Couleurs.projectil)
+    global liste_tirs
+    for tirs in liste_tirs:
+        print(tirs)
+        x = tirs[0]
+        y = tirs[1] 
+        rect = Rect((x,y),(15,15))
+        screen.draw.filled_rect(rect, Couleurs.projectil)
 
 def draw_levels():
     """
@@ -133,22 +133,22 @@ def draw_decor(decor):
     screen.draw.filled_rect(rect_decor,couleur)
 
 def slimy_tire():
-	global liste_tirs, player
-	liste_tirs.append([player.pos[0] + 50, player.pos[1] + 13])
+    global liste_tirs, player
+    liste_tirs.append([player.pos[0] + 50, player.pos[1] + 13])
 
 def move_projectil():
-	global liste_tirs
-	for tir in liste_tirs:
-		tir[0] += player.spd + 5
-	print(liste_tirs)
+    global liste_tirs
+    for tir in liste_tirs:
+        tir[0] += player.spd + 5
+    print(liste_tirs)
 
-	
+    
 def on_mouse_down(button):
-	global a_tire
-	#if a_tire == False:
-	if button == mouse.LEFT:
-		slimy_tire()
-		a_tire = True
+    global a_tire
+    #if a_tire == False:
+    if button == mouse.LEFT:
+        slimy_tire()
+        a_tire = True
 
 def check_keys():
     global count_frame,force_gravite
@@ -177,6 +177,7 @@ gravity = 2
 force_gravite = -1 
 hauteur_player = 40
 w = 0
+count_frame2 = 0
 count_frame = 0
 stage = 1
 liste_tirs = []
