@@ -20,6 +20,7 @@ class Couleurs():
     fond = (150,207,255)
     terre = (150,90,20)
     slime = (255,110,110)
+    projectil = (255,80,80)
 
 
     def color(c):
@@ -34,7 +35,7 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame,levels,stage
+    global force_gravite, w, count_frame,levels,stage, a_tire
     """
     """
     count_frame += 1
@@ -55,6 +56,11 @@ def update():
     if check_collisisons_down() == w:
         player.pos[1] = w - hauteur_player
         player.etat = None
+    if a_tire == True:
+		move_projectil()
+	if count_frame >= 5 :
+		count_frame = 0
+	count_frame += 1
 
 def scrolling():
     for lvl in levels :
@@ -94,12 +100,22 @@ def draw():
     screen.fill(Couleurs.fond)
     draw_levels()
     draw_player()
+    draw_projectil()
 
 def draw_player():
     x = player.pos[0]
     y = player.pos[1]
     rect = Rect((x,y),(50,hauteur_player))
     screen.draw.filled_rect(rect,Couleurs.slime)
+
+def draw_projectil():
+	global liste_tirs
+	for tirs in liste_tirs:
+		print(tirs)
+		x = tirs[0]
+		y = tirs[1] 
+		rect = Rect((x,y),(15,15))
+		screen.draw.filled_rect(rect, Couleurs.projectil)
 
 def draw_levels():
     """
@@ -115,6 +131,24 @@ def draw_decor(decor):
     couleur = Couleurs.color(decor.couleur())
     rect_decor = Rect(topleft,(largeur,hauteur))
     screen.draw.filled_rect(rect_decor,couleur)
+
+def slimy_tire():
+	global liste_tirs, player
+	liste_tirs.append([player.pos[0] + 50, player.pos[1] + 13])
+
+def move_projectil():
+	global liste_tirs
+	for tir in liste_tirs:
+		tir[0] += player.spd + 5
+	print(liste_tirs)
+
+	
+def on_mouse_down(button):
+	global a_tire
+	#if a_tire == False:
+	if button == mouse.LEFT:
+		slimy_tire()
+		a_tire = True
 
 def check_keys():
     global count_frame,force_gravite
@@ -145,6 +179,8 @@ hauteur_player = 40
 w = 0
 count_frame = 0
 stage = 1
+liste_tirs = []
+a_tire = False
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 pgzrun.go()
