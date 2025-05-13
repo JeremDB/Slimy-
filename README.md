@@ -16,7 +16,7 @@ Les différentes étapes à suivre pour créer le jeu !!
 étapes 1 //
    Créer un personnage qui peut se déplacer tranquillement et qui a une physique propre.
    
-      - Louis : A fait le personnage, ses déplacement et la physique du jeu. A aussi fait quelque collisions 
+      - Louis : A fait le personnage, ses déplacement et la physique du jeu. A aussi fini les colisions avec l'aide précieuse de Jérémie et Sarah
 
       - Sarah : A aider Louis pour la physique et a créé les projectiles du personnage
 
@@ -30,6 +30,8 @@ Les différentes étapes à suivre pour créer le jeu !!
 
 étapes 3 // 
   Faire s'arrêter le jeu et lancer un combat de boss épique 
+
+     - Jérémie : A fait le scrolling et l'arrêt sur le boss.
 
 étapes 4 // 
   Faire un HUD pofiner et un écran de démarrage etc...
