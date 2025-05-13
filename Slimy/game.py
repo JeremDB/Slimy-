@@ -36,7 +36,7 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame,levels,stage, a_tire, count_frame2,boss_kill
+    global force_gravite, w, count_frame,levels,stage, a_tire, count_frame2, boss_kill
     """
     """
     count_frame += 1
@@ -134,8 +134,7 @@ def check_collisisons_droite():
             hauteur = decor.get_hauteur()
             rect_decor = Rect((v,w),(largeur,hauteur))
             if pygame.Rect.colliderect(rect_player,rect_decor):
-                if x < v:
-                    return v
+                return v
     return -1
 
 def check_collisisons_gauche():
@@ -151,7 +150,8 @@ def check_collisisons_gauche():
             hauteur = decor.get_hauteur()
             rect_decor = Rect((v,w),(largeur,hauteur))
             if pygame.Rect.colliderect(rect_player,rect_decor):
-                return v 
+                if y < w:
+                    return v 
     return -1
 
 
