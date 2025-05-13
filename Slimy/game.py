@@ -42,13 +42,17 @@ def update():
 
     check_keys()
 
-    if stage <= level.nb_niveau +1:
+    if stage < 5 :
         scrolling()
         if check_collisisons_droite() == v :
             player.pos[0] = v - largeur_player
     if levels[1].get_decors()[0].get_pos()[0] <= 0 :
-        if stage < level.nb_niveau :
+        if stage == 3 :
+            level.ajuste_niveaux_boss(levels)
+            stage += 1 
+        else :
             level.ajuste_niveaux(levels)
+            stage += 1
 
     if player.etat == "saut":
         gravite()
@@ -68,10 +72,9 @@ def update():
         gravite()
         print(check_collisisons_down())
         
-
-
-
-
+    if boss_kill: 
+        stage = 0
+        boss_kill = False
 
 
     if a_tire == True:
@@ -169,6 +172,11 @@ def draw():
     draw_levels()
     draw_player()
     draw_projectil()
+    draw_ui()
+
+def draw_ui():
+    screen.draw.text(("Stage :"), (25, 100), fontsize=60, color = Couleurs.noir)
+    screen.draw.text((str(stage)), (170, 100), fontsize=60, color = Couleurs.noir)
 
 def draw_player():
     x = player.pos[0]
@@ -228,6 +236,10 @@ def check_keys():
     # Echap pour quitter le jeu
     if keyboard.ESCAPE:
         exit()
+        
+    if keyboard.P :
+        boss_kill = True
+    
     if keyboard.SPACE:
         if count_frame > 10 and player.etat == "sol":
             force_gravite = -1
@@ -257,6 +269,7 @@ count_frame = 0
 stage = 1
 liste_tirs = []
 a_tire = False
+boss_kill = False
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 pgzrun.go()
