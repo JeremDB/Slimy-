@@ -21,6 +21,7 @@ class Couleurs():
     terre = (150,90,20)
     slime = (255,110,110)
     projectil = (255,80,80)
+    noir = (0,0,0)
 
 
     def color(c):
@@ -35,7 +36,7 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame,levels,stage, a_tire, count_frame2
+    global force_gravite, w, count_frame,levels,stage, a_tire, count_frame2,boss_kill
     """
     """
     count_frame += 1
