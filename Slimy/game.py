@@ -130,7 +130,8 @@ def check_collisisons_droite():
             hauteur = decor.get_hauteur()
             rect_decor = Rect((v,w),(largeur,hauteur))
             if pygame.Rect.colliderect(rect_player,rect_decor):
-                return v
+            	if x < v:
+                	return v
     return -1
 
 def check_collisisons_gauche():
