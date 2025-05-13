@@ -78,7 +78,7 @@ def update():
         player.etat = "air"
         force_gravite = -0.2
         gravite()
-        print(check_collisisons_down())
+        
         
     if boss_kill: 
         stage = 0
@@ -142,8 +142,8 @@ def check_collisisons_droite():
             hauteur = decor.get_hauteur()
             rect_decor = Rect((v,w),(largeur,hauteur))
             if pygame.Rect.colliderect(rect_player,rect_decor):
-                if player.etat != "sol":
-                    if x < v:
+                if player.etat != "sol" and player.etat != "saut":
+                    if x < v and y < w:
                         return v
                 else:
                     return v 
@@ -162,8 +162,8 @@ def check_collisisons_gauche():
             hauteur = decor.get_hauteur()
             rect_decor = Rect((v,w),(largeur,hauteur))
             if pygame.Rect.colliderect(rect_player,rect_decor):
-                if player.etat != "sol":
-                    if x > v:
+                if player.etat != "sol" and player.etat != "saut" :
+                    if x > v and y < w:
                         return v
                 else:
                     return v 
@@ -205,7 +205,6 @@ def draw_player():
 def draw_projectil():
     global liste_tirs
     for tirs in liste_tirs:
-        print(tirs)
         x = tirs[0]
         y = tirs[1] 
         rect = Rect((x,y),(15,15))
@@ -234,7 +233,6 @@ def move_projectil():
     global liste_tirs
     for tir in liste_tirs:
         tir[0] += player.spd + 5
-    print(liste_tirs)
 
     
 def on_mouse_down(button):
@@ -265,12 +263,18 @@ def check_keys():
             force_gravite -= 4
             count_frame = 0
     if keyboard.D:
-        player.pos[0] += 5
+        if check_collisisons_droite() == -1:
+            player.pos[0] +=5
+        if check_collisisons_gauche() == v:
+            player.pos[0] = v - largeur_player
     if keyboard.Q:
         if check_collisisons_gauche() == -1:
             player.pos[0] -=5
         if check_collisisons_gauche() == v:
-            player.pos[0] = v + largeur - 2
+            if stage == 5:
+                player.pos[0] = v + largeur
+            else:
+                player.pos[0] = v + largeur -2
         
 
 levels = level.init_niveau()
