@@ -86,7 +86,7 @@ def scrolling():
 
 
 def check_collisisons_down():
-    global w 
+    global w, largeur
     x = player.pos[0]
     y = player.pos[1] + force_gravite
     rect_player = Rect((x,y),(50,40))
@@ -102,7 +102,7 @@ def check_collisisons_down():
     return -1
 
 def check_collisisons_top():
-    global w 
+    global w, largeur
     x = player.pos[0]
     y = player.pos[1] - force_gravite
     rect_player = Rect((x,y),(50,40))
@@ -118,7 +118,7 @@ def check_collisisons_top():
     return -1
 
 def check_collisisons_droite():
-    global v
+    global v, largeur
     x = player.pos[0]
     y = player.pos[1] 
     rect_player = Rect((x,y),(50,40))
@@ -130,24 +130,24 @@ def check_collisisons_droite():
             hauteur = decor.get_hauteur()
             rect_decor = Rect((v,w),(largeur,hauteur))
             if pygame.Rect.colliderect(rect_player,rect_decor):
-            	if x < v:
-                	return v
+                if x < v:
+                    return v
     return -1
 
 def check_collisisons_gauche():
-    global v
-    x = player.pos[0] - 5
+    global v, largeur
+    x = player.pos[0]
     y = player.pos[1] 
     rect_player = Rect((x,y),(50,40))
     for lvl in levels :
         for decor in lvl.get_decors():
-            v = decor.get_pos()[0] + decor.get_largeur()
+            v = decor.get_pos()[0] 
             w = decor.get_pos()[1]
             largeur = decor.get_largeur()
             hauteur = decor.get_hauteur()
             rect_decor = Rect((v,w),(largeur,hauteur))
             if pygame.Rect.colliderect(rect_player,rect_decor):
-                return v
+                return v 
     return -1
 
 
@@ -237,7 +237,11 @@ def check_keys():
     if keyboard.D:
         player.pos[0] += 5
     if keyboard.Q:
-        player.pos[0] -=5
+        if check_collisisons_gauche() == -1:
+            player.pos[0] -=5
+        if check_collisisons_gauche() == v:
+            player.pos[0] = v + largeur - 2
+        
 
 levels = level.init_niveau()
 player = entite.Joueur([50,660])
@@ -245,6 +249,7 @@ gravity = 2
 force_gravite = -1 
 hauteur_player = 40
 largeur_player = 50
+largeur = 0
 w = 0
 v = 0
 count_frame2 = 0
