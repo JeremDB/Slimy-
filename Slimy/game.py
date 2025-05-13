@@ -141,8 +141,12 @@ def check_collisisons_droite():
             largeur = decor.get_largeur()
             hauteur = decor.get_hauteur()
             rect_decor = Rect((v,w),(largeur,hauteur))
-            if pygame.Rect.colliderect(rect_player,rect_decor) and y < w:
-                return v
+            if pygame.Rect.colliderect(rect_player,rect_decor):
+                if player.etat != "sol":
+                    if x < v:
+                        return v
+                else:
+                    return v 
     return -1
 
 def check_collisisons_gauche():
@@ -157,7 +161,11 @@ def check_collisisons_gauche():
             largeur = decor.get_largeur()
             hauteur = decor.get_hauteur()
             rect_decor = Rect((v,w),(largeur,hauteur))
-            if pygame.Rect.colliderect(rect_player,rect_decor) and y < w:
+            if pygame.Rect.colliderect(rect_player,rect_decor):
+                if player.etat != "sol":
+                    if x > v:
+                        return v
+                else:
                     return v 
     return -1
 
