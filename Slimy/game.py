@@ -19,14 +19,21 @@ class Couleurs():
     """
     fond = (150,207,255)
     terre = (150,90,20)
+    jungle = (100,120,20)
+    terre_brule = (110,50,10)
     slime = (255,110,110)
     projectil = (255,80,80)
     noir = (0,0,0)
 
 
     def color(c):
-        if c == "terre":
-            return Couleurs.terre
+        if c == "decor":
+            if monde % 3 == 0:
+                return Couleurs.terre_brule
+            if monde % 3 == 1:
+                return Couleurs.terre
+            if monde % 3 == 2:
+                return Couleurs.jungle
 
     @staticmethod
     def random() -> tuple:
@@ -36,7 +43,7 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame,levels,stage, a_tire, count_frame2, boss_kill
+    global force_gravite, w, count_frame,levels,stage, a_tire, count_frame2, boss_kill, monde
     """
     """
     count_frame += 1
@@ -75,6 +82,7 @@ def update():
         
     if boss_kill: 
         stage = 0
+        monde += 1
         boss_kill = False
 
 
@@ -150,7 +158,7 @@ def check_collisisons_gauche():
             hauteur = decor.get_hauteur()
             rect_decor = Rect((v,w),(largeur,hauteur))
             if pygame.Rect.colliderect(rect_player,rect_decor) and y < w:
-                return v 
+                    return v 
     return -1
 
 
@@ -177,6 +185,8 @@ def draw():
 def draw_ui():
     screen.draw.text(("Stage :"), (25, 100), fontsize=60, color = Couleurs.noir)
     screen.draw.text((str(stage)), (170, 100), fontsize=60, color = Couleurs.noir)
+    screen.draw.text(("Monde :"), (25, 150), fontsize=60, color = Couleurs.noir)
+    screen.draw.text((str(monde)), (200, 150), fontsize=60, color = Couleurs.noir)
 
 def draw_player():
     x = player.pos[0]
@@ -267,6 +277,7 @@ v = 0
 count_frame2 = 0
 count_frame = 0
 stage = 1
+monde = 1
 liste_tirs = []
 a_tire = False
 boss_kill = False
