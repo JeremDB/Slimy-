@@ -279,6 +279,7 @@ def check_keys():
             else:
                 player.pos[0] = v + largeur - player.spd
         
+# Globals
 
 levels = level.init_niveau()
 player = entite.Joueur([50,660])
