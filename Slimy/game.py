@@ -1,140 +1,349 @@
-from random import randint
-from copy import deepcopy
 
-class Decors:
-
-	def __init__(self, x, y, largeur, hauteur, couleur):
-		self.__x = x
-		self.__y = y
-		self.__largeur = largeur
-		self.__hauteur = hauteur
-		self.__couleur = couleur 
-
-	def get_pos(self):
-		return [self.__x, self.__y]
-
-	def get_largeur(self):
-		return self.__largeur
-
-	def get_hauteur(self):
-		return self.__hauteur
-
-	def couleur(self):
-		return self.__couleur
-
-	def scroll(self, n):
-		self.__x -= n
-
-	def __repr__(self):
-		return f"{self.__x,self.__y,self.__largeur,self.__hauteur,self.__couleur}"
-
-class Levels:
-
-	def __init__(self,decors,type = None):
-		self.decors = decors
-		self.type = "Normal"
-
-	def get_decors(self):
-		return self.decors
-
-	def add_decor(self,decor):
-		self.decors.append(decor)
-
-	def scroll(self,n):
-		for decor in self.decors:
-			decor.scroll(n)
-
-	def decalage(self):
-		for decor in self.decors :
-			decor.scroll(-1920)
-
-niveau1 = Levels([Decors(-40, 700, 120, 380, 'decor')
-	,Decors(1840, 700, 80, 380, 'decor')
-,Decors(80, 700, 880, 380, 'decor')
-,Decors(320, 580, 320, 20, 'decor')
-,Decors(960, 700, 400, 380, 'decor')
-,Decors(1280, 620, 320, 480, 'decor')
-,Decors(1440, 580, 280, 520, 'decor')
-,Decors(640, 480, 240, 20, 'decor')
-,Decors(960, 440, 160, 20, 'decor')
-,Decors(1200, 360, 160, 20, 'decor')])
-	
-niveaux_boss = [Levels([Decors(-40, 700, 120, 380, 'decor')
-	,Decors(1840, 700, 80, 380, 'decor')
-,Decors(800, 680, 80, 100, 'decor')
-,Decors(80, 660, 500, 480, 'decor')
-,Decors(480, 760, 400, 340, 'decor')
-,Decors(880, 780, 900, 320, 'decor')
-,Decors(640, 560, 160, 20, 'decor')
-,Decors(800, 560, 160, 20, 'decor')
-,Decors(880, 440, 160, 20, 'decor')
-,Decors(1040, 320, 240, 20, 'decor')
-,Decors(1040, 560, 160, 20, 'decor')	])]
-
-niveaux = [
-	Levels([Decors(-40, 700, 120, 380, 'decor')
-		,Decors(1840, 700, 80, 380, 'decor')
-	,Decors(0, 700, 400, 420, 'decor')
-	,Decors(880, 700, 480, 380, 'decor')
-	,Decors(320, 860, 240, 20, 'decor')
-	,Decors(640, 800, 160, 20, 'decor')
-	,Decors(800, 740, 160, 20, 'decor')
-	,Decors(1360, 840, 160, 20, 'decor')
-	,Decors(1520, 780, 80, 20, 'decor')
-	,Decors(1680, 740, 160, 20, 'decor')
-	,Decors(320, 560, 240, 20, 'decor')
-	,Decors(640, 460, 240, 20, 'decor')
-	,Decors(960, 380, 240, 20, 'decor')
-	,Decors(1360, 360, 240, 20, 'decor')]),
-	Levels([Decors(-40, 700, 120, 380, 'decor')
-		,Decors(1840, 700, 80, 380, 'decor')
-	,Decors(80, 700, 480, 480, 'decor')
-	,Decors(240, 580, 480, 480, 'decor')
-	,Decors(640, 620, 400, 480, 'decor')
-	,Decors(1040, 800, 320, 300, 'decor')
-	,Decors(960, 700, 160, 400, 'decor')
-	,Decors(1440, 780, 160, 20, 'decor')
-	,Decors(1680, 780, 160, 20, 'decor')
-	,Decors(960, 740, 240, 600, 'decor')
-	,Decors(380, 540, 480, 600, 'decor')
-	,Decors(420,560,200,600, 'decor')])
-	]
-
-def init_niveau():
-	niv2 = deepcopy(niveaux[randint(0,len(niveaux)-1)])
-	niv2.decalage()
-	return [niveau1, niv2]
-
-def ajuste_niveaux(levels):
-	nouveau = deepcopy(niveaux[randint(0,len(niveaux)-1)])
-	nouveau.decalage()
-	levels.append(nouveau)
-	levels.pop(0)
-	return levels
-
-def ajuste_niveaux_boss(levels):
-	nouveau = deepcopy(niveaux_boss[randint(0,len(niveaux_boss)-1)])
-	nouveau.decalage()
-	levels.append(nouveau)
-	levels.pop(0)
-	return levels
+import os
+import sys
+import pgzrun
+import pygame
+import level
+from random import randint, choice
+import entite
 
 
+WIDTH = 1920
+HEIGHT = 1080
+TITLE = "Slimy!"
+SPD_MAX = 14
+hauteur_player = 40
+largeur_player = 50
+taille_projectil = 15
 
-nouveau_lvl = [
-Levels([Decors(0, 700, 80, 380, 'decor'),
-Decors(1840, 700, 80, 380, 'decor'),
-Decors(80, 660, 500, 480, 'decor'),
-Decors(480, 760, 400, 340, 'decor'),
-Decors(880, 780, 900, 320, 'decor'),
-Decors(640, 560, 160, 20, 'decor'),
-Decors(800, 680, 80, 100, 'decor'),
-Decors(800, 560, 160, 20, 'decor'),
-Decors(880, 440, 160, 20, 'decor'),
-Decors(1040, 320, 240, 20, 'decor'),
-Decors(1040, 560, 160, 20, 'decor')
-	])
-	]
-nb_niveau = len(niveaux)
-decors_de_base = [Decors(0,700,80,380,"decor"),Decors(1840,700,80,380,"decor")]
-niveau_vide = [Levels(decors_de_base)]
+class Couleurs():
+    """
+    Propose une méthode permettant de renvoyer une couleur aléatoire
+    Contient les constantes des couleurs utilisés
+    """
+    fond = (150,207,255)
+    terre = (150,90,20)
+    jungle = (100,120,20)
+    terre_brule = (110,50,10)
+    terre_contour = (110,50,0)
+    jungle_contour = (60,80,0)
+    terre_brule_contour = (70,10,0)
+    slime = (255,110,110)
+    projectil = (255,80,80)
+    noir = (0,0,0)
+
+
+    def color(c):
+        if c == "decor":
+            if monde % 3 == 0:
+                return Couleurs.terre_brule
+            if monde % 3 == 1:
+                return Couleurs.terre
+            if monde % 3 == 2:
+                return Couleurs.jungle
+
+    def color_contour(c):
+        if c == "decor":
+            if monde % 3 == 0:
+                return Couleurs.terre_brule_contour
+            if monde % 3 == 1:
+                return Couleurs.terre_contour
+            if monde % 3 == 2:
+                return Couleurs.jungle_contour
+
+
+    @staticmethod
+    def random() -> tuple:
+        """
+        Renvoie une couleur aléatoire au format (R,G,B)
+        """
+        return (randint(0,255),randint(0,255),randint(0,255))
+
+def update():
+    global force_gravite, w, count_frame,levels,stage, a_tire, count_frame2, boss_kill, monde
+    """
+    """
+    count_frame += 1
+
+    check_keys()
+
+    if stage < 5 :
+        scrolling()
+        if check_collisisons_droite() == v :
+            player.pos[0] = v - largeur_player
+    if levels[1].get_decors()[0].get_pos()[0] <= 0 :
+        if stage == 3 :
+            level.ajuste_niveaux_boss(levels)
+            stage += 1 
+        else :
+            level.ajuste_niveaux(levels)
+            stage += 1
+
+    if player.etat == "saut":
+        gravite()
+    if check_collisisons_down() == -1 : #Ne touche pas le sol
+        calc_speed()
+        gravite()
+    if check_collisisons_top() == -1: #Ne touche pas le bas d'un décor
+        if check_collisisons_down() == w: # si tu touche le haut d'un décor
+            player.pos[1] = w - hauteur_player
+            player.etat = "sol"
+            
+            
+    if check_collisisons_top() == w and player.etat == "saut" : # Si tu touche le bas du décor
+        player.pos[1] = w
+        player.etat = "air"
+        force_gravite = -0.2
+        gravite()
+
+    if check_collisions_tirs() == 2:
+        liste_tirs.remove(liste_tirs[0])
+        
+    if boss_kill: 
+        stage = 1
+        monde += 1
+        if player.spd < SPD_MAX :
+            player.spd += 1
+        boss_kill = False
+
+
+    if a_tire == True:
+        move_projectil()
+    if count_frame2 >= 5 :
+        count_frame2 = 0
+    count_frame2 += 1
+
+def scrolling():
+    for lvl in levels :
+        lvl.scroll(player.spd)       
+
+
+def check_collisisons_down():
+    global w, largeur
+    x = player.pos[0]
+    y = player.pos[1] + force_gravite
+    rect_player = Rect((x,y),(50,40))
+    for lvl in levels :
+        for decor in lvl.get_decors():
+            v = decor.get_pos()[0]
+            w = decor.get_pos()[1]
+            largeur = decor.get_largeur()
+            hauteur = decor.get_hauteur()
+            rect_decor = Rect((v,w),(largeur,hauteur))
+            if pygame.Rect.colliderect(rect_player,rect_decor) and y < w:
+                return w
+    return -1
+
+def check_collisisons_top():
+    global w, largeur
+    x = player.pos[0]
+    y = player.pos[1] - force_gravite
+    rect_player = Rect((x,y),(50,40))
+    for lvl in levels :
+        for decor in lvl.get_decors():
+            v = decor.get_pos()[0]
+            w = decor.get_pos()[1] + decor.get_hauteur()
+            largeur = decor.get_largeur()
+            hauteur = decor.get_hauteur()
+            rect_decor = Rect((v,w),(largeur,hauteur))
+            if pygame.Rect.colliderect(rect_player,rect_decor):
+                return w
+    return -1
+
+def check_collisisons_droite():
+    global v, largeur
+    x = player.pos[0]
+    y = player.pos[1] 
+    rect_player = Rect((x,y),(50,40))
+    for lvl in levels :
+        for decor in lvl.get_decors():
+            v = decor.get_pos()[0]
+            w = decor.get_pos()[1]
+            largeur = decor.get_largeur()
+            hauteur = decor.get_hauteur()
+            rect_decor = Rect((v,w),(largeur,hauteur))
+            if pygame.Rect.colliderect(rect_player,rect_decor):
+                if player.etat != "sol" and player.etat != "saut":
+                    if x < v and y < w:
+                        return v
+                else:
+                    return v 
+    return -1
+
+def check_collisisons_gauche():
+    global v, largeur
+    x = player.pos[0]
+    y = player.pos[1] 
+    rect_player = Rect((x,y),(50,40))
+    for lvl in levels :
+        for decor in lvl.get_decors():
+            v = decor.get_pos()[0] 
+            w = decor.get_pos()[1]
+            largeur = decor.get_largeur()
+            hauteur = decor.get_hauteur()
+            rect_decor = Rect((v,w),(largeur,hauteur))
+            if pygame.Rect.colliderect(rect_player,rect_decor):
+                if player.etat != "sol" and player.etat != "saut" :
+                    if x > v and y < w:
+                        return v
+                else:
+                    return v 
+    return -1
+
+def check_collisions_tirs():
+    global liste_tirs
+    for tir in liste_tirs:
+        rect_tir = Rect(tir.pos,(taille_projectil,taille_projectil))
+        for lvl in levels :
+            for decor in lvl.get_decors():
+                v = decor.get_pos()[0] 
+                w = decor.get_pos()[1]
+                largeur = decor.get_largeur()
+                hauteur = decor.get_hauteur()
+                rect_decor = Rect((v,w),(largeur,hauteur))
+                if pygame.Rect.colliderect(rect_tir,rect_decor):
+                    liste_tirs.remove(tir)
+    return -1
+
+def gravite():
+    global force_gravite
+    player.pos[1] += force_gravite
+
+def calc_speed():
+  global force_gravite
+  v_y = force_gravite
+  v_y = v_y + 0.10*gravity
+  force_gravite = v_y
+  return
+
+def draw():
+    """
+    """
+    screen.fill(Couleurs.fond)
+    draw_levels()
+    draw_player()
+    draw_projectil()
+    draw_ui()
+
+def draw_ui():
+    screen.draw.text(("Stage :"), (25, 100), fontsize=60, color = Couleurs.noir)
+    screen.draw.text((str(stage)), (170, 100), fontsize=60, color = Couleurs.noir)
+    screen.draw.text(("Monde :"), (25, 150), fontsize=60, color = Couleurs.noir)
+    screen.draw.text((str(monde)), (200, 150), fontsize=60, color = Couleurs.noir)
+
+def draw_player():
+    x = player.pos[0]
+    y = player.pos[1]
+    s = Actor("slimy", topleft=(x,y))
+    s.draw()
+
+def draw_projectil():
+    global liste_tirs
+    for tir in liste_tirs:
+        x,y = tir.pos
+        p = Actor("projectil", topleft=(x,y))
+        p.draw()
+
+def draw_levels():
+    """
+    """
+    for lvl in levels :
+        for decor in lvl.get_decors():
+            draw_decor(decor)
+
+def draw_decor(decor):
+    draw_contour(decor)
+    x , y = decor.get_pos()
+    x += 5
+    y += 5 
+    topleft = (x,y)
+    largeur = decor.get_largeur() -10
+    hauteur = decor.get_hauteur() -10
+    couleur = Couleurs.color(decor.couleur())
+    rect_decor = Rect(topleft,(largeur,hauteur))
+    screen.draw.filled_rect(rect_decor,couleur)
+
+def draw_contour(decor):
+    topleft = decor.get_pos()
+    largeur = decor.get_largeur()
+    hauteur = decor.get_hauteur()
+    couleur = Couleurs.color_contour(decor.couleur())
+    rect_decor = Rect(topleft,(largeur,hauteur))
+    screen.draw.filled_rect(rect_decor,couleur)
+
+
+
+def slimy_tire():
+    global liste_tirs
+    x,y = player.pos[0], player.pos[1]
+    x += largeur_player - 5
+    y += hauteur_player//2 -taille_projectil// 2
+    liste_tirs.append(entite.Projectil([x,y],((player.spd+1)*2.5)))
+
+def move_projectil():
+    global liste_tirs
+    for tir in liste_tirs:
+        tir.move()
+    
+def on_mouse_down(button):
+    global a_tire
+    #if a_tire == False:
+    if button == mouse.LEFT:
+        slimy_tire()
+        a_tire = True
+
+def check_keys():
+    global count_frame,force_gravite,boss_kill
+    """
+    Verifie les touches enfoncée 
+    Echap pour quitter le jeu
+    """
+
+    # Echap pour quitter le jeu
+    if keyboard.ESCAPE:
+        exit()
+        
+    if keyboard.P :
+        boss_kill = True
+    
+    if keyboard.SPACE:
+        if count_frame > 10 and player.etat == "sol":
+            force_gravite = -1
+            player.etat = "saut"
+            force_gravite -= 4.3
+            count_frame = 0
+    if keyboard.D:
+        if check_collisisons_droite() == -1:
+            player.pos[0] +=5
+        if check_collisisons_gauche() == v:
+            player.pos[0] = v - largeur_player
+    if keyboard.Q:
+        if check_collisisons_gauche() == -1:
+            player.pos[0] -=5
+        if check_collisisons_gauche() == v:
+            if stage == 5:
+                player.pos[0] = v + largeur
+            else:
+                player.pos[0] = v + largeur - player.spd
+        
+# Globals
+
+etat_game = "menu"
+levels = level.init_niveau()
+player = entite.Joueur([50,660],spd = 10)
+gravity = 2
+force_gravite = -1 
+largeur = 0
+w = 0
+v = 0
+count_frame2 = 0
+count_frame = 0
+stage = 1
+monde = 1
+liste_tirs = []
+a_tire = False
+boss_kill = False
+
+
+os.environ['SDL_VIDEO_CENTERED'] = '1'
+pgzrun.go()
