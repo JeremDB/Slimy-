@@ -33,7 +33,7 @@ class Couleurs():
     noir = (0,0,0)
 
 
-    def color(c):
+    def color(c: str) -> tuple:
         """
         Renvoie une couleur de décor en fonction du monde actuel
         """
@@ -45,7 +45,7 @@ class Couleurs():
             if monde % 3 == 2:
                 return Couleurs.jungle
 
-    def color_contour(c):
+    def color_contour(c: str) -> tuple:
         """
         Renvoie la couleur du contour des décors en fonction du monde actuel
         """
@@ -138,7 +138,7 @@ def scrolling():
         lvl.scroll(player.spd)       
 
 
-def check_collisisons_down():
+def check_collisisons_down() -> float:
     """
     """
     global w, largeur
@@ -156,7 +156,7 @@ def check_collisisons_down():
                 return w
     return -1
 
-def check_collisisons_top():
+def check_collisisons_top() -> float:
     """
     """
     global w, largeur
@@ -174,7 +174,7 @@ def check_collisisons_top():
                 return w
     return -1
 
-def check_collisisons_droite():
+def check_collisisons_droite() -> float:
     """
     """
     global v, largeur
@@ -196,7 +196,7 @@ def check_collisisons_droite():
                     return v 
     return -1
 
-def check_collisisons_gauche():
+def check_collisisons_gauche() -> float:
     """
     """
     global v, largeur
@@ -250,7 +250,6 @@ def calc_speed():
     v_y = force_gravite
     v_y = v_y + 0.10*gravity
     force_gravite = v_y
-    return
 
 def draw():
     """
@@ -370,7 +369,7 @@ def slimy_tire():
     x,y = player.pos[0], player.pos[1]
     x += largeur_player - 5
     y += hauteur_player//2 -taille_projectil// 2
-    liste_tirs.append(entite.Projectil([x,y],((player.spd+1)*2.5)))
+    liste_tirs.append(entite.Projectil([x,y],(player.spd+6)))
 
 def move_projectil():
     """
