@@ -219,17 +219,27 @@ def calc_speed():
 def draw():
     """
     """
-    screen.fill(Couleurs.fond)
+    draw_ciel()
     draw_levels()
     draw_player()
     draw_projectil()
     draw_ui()
+
+def draw_ciel():
+    if monde % 3 == 1 :
+        screen.blit("ciel_clair",(0,0))
+    if monde % 3 == 2:
+        screen.blit("ciel_clair",(0,0))
+    if monde % 3 == 0 :
+        screen.blit("ciel_clair",(0,0))
+
 
 def draw_ui():
     screen.draw.text(("Stage :"), (25, 100), fontsize=60, color = Couleurs.noir)
     screen.draw.text((str(stage)), (170, 100), fontsize=60, color = Couleurs.noir)
     screen.draw.text(("Monde :"), (25, 150), fontsize=60, color = Couleurs.noir)
     screen.draw.text((str(monde)), (200, 150), fontsize=60, color = Couleurs.noir)
+
 
 def draw_player():
     x = player.pos[0]
@@ -250,6 +260,15 @@ def draw_levels():
     for lvl in levels :
         for decor in lvl.get_decors():
             draw_decor(decor)
+        for ennemi in lvl.ennemis :
+            draw_ennemi(ennemi)
+
+def draw_ennemi(ennemi):
+    topleft = ennemi.pos
+    taille= ennemi.taille
+    couleur = (150,10,150)
+    rect_ennemi = Rect(topleft,taille)
+    screen.draw.filled_rect(rect_ennemi,couleur)
 
 def draw_decor(decor):
     draw_contour(decor)
