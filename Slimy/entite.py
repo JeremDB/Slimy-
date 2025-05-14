@@ -37,5 +37,7 @@ class Projectil:
 		self.pos = pos
 		self.spd = spd 
 
+	def move(self):
+		self.pos[0] += self.spd
 
 
