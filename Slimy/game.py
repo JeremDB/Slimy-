@@ -71,12 +71,12 @@ def update():
         scrolling()
         if check_collisisons_droite() == v :
             player.pos[0] = v - largeur_player
-    if levels[1].get_decors()[0].get_pos()[0] <= 0 :
+    if levels[1].pos_x <= 0 :
         if stage == 3 :
-            level.ajuste_niveaux_boss(levels)
+            level.ajuste_niveaux_boss(levels,0)
             stage += 1 
         else :
-            level.ajuste_niveaux(levels)
+            level.ajuste_niveaux(levels,0)
             stage += 1
 
     if player.etat == "saut":
@@ -330,7 +330,7 @@ def check_keys():
 
 etat_game = "menu"
 levels = level.init_niveau()
-player = entite.Joueur([50,660],spd = 10)
+player = entite.Joueur([50,660],spd = 3)
 gravity = 2
 force_gravite = -1 
 largeur = 0
