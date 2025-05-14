@@ -14,23 +14,6 @@ class Joueur:
 		self.etat = etat
 		self.pos = pos
 
-class Ennemie:
-	def __init__(self, pos, pv = 100, att_dist = 1, att_cac = 1):
-		self.pv = pv
-		self.att_dist = att_dist
-		self.att_cac = att_cac
-		self.pos = pos
-
-
-class Boss:
-	def __init__(self, pos, loot, name, pv = 100, att_dist = 1, att_cac = 1):
-		self.name = name
-		self.pv = pv
-		self.att_dist = att_dist
-		self.att_cac = att_cac
-		self.pos = pos
-		self.loot = None
-
 class Projectil:
 
 	def __init__(self, pos, spd = 1):
