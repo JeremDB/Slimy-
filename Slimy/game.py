@@ -94,7 +94,7 @@ def update():
 
 def scrolling():
     for lvl in levels :
-        lvl.scroll(2)       
+        lvl.scroll(player.spd)       
 
 
 def check_collisisons_down():
@@ -274,7 +274,7 @@ def check_keys():
             if stage == 5:
                 player.pos[0] = v + largeur
             else:
-                player.pos[0] = v + largeur -2
+                player.pos[0] = v + largeur - player.spd
         
 
 levels = level.init_niveau()
