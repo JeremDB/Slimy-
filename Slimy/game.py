@@ -60,10 +60,11 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame,levels,stage, a_tire, count_frame2, boss_kill, monde
+    global force_gravite, w, count_frame,levels,stage, a_tire, count_frame2, boss_kill, monde, anim_ciel
     """
     """
     count_frame += 1
+    anim_ciel += 1
 
     check_keys()
 
@@ -226,12 +227,20 @@ def draw():
     draw_ui()
 
 def draw_ciel():
+    global anim_ciel
     if monde % 3 == 1 :
-        screen.blit("ciel_clair",(0,0))
+        if anim_ciel > 30:
+            screen.blit("ciel_clair",(0,0))
+        else:
+            screen.blit("ciel_clair_1",(0,0))
+
     if monde % 3 == 2:
         screen.blit("ciel_clair",(0,0))
     if monde % 3 == 0 :
         screen.blit("ciel_clair",(0,0))
+
+    if anim_ciel > 59:
+        anim_ciel = 0
 
 
 def draw_ui():
@@ -357,6 +366,7 @@ w = 0
 v = 0
 count_frame2 = 0
 count_frame = 0
+anim_ciel = 0
 stage = 1
 monde = 1
 liste_tirs = []
