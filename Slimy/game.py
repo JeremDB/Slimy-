@@ -409,7 +409,7 @@ def check_keys():
         if count_frame > 10 and player.etat == "sol":
             force_gravite = -1
             player.etat = "saut"
-            force_gravite -= 4.3
+            force_gravite -= 4.4
             count_frame = 0
     if keyboard.D:
         if check_collisisons_droite() == -1:
