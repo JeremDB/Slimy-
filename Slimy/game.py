@@ -11,6 +11,7 @@ import entite
 WIDTH = 1920
 HEIGHT = 1080
 TITLE = "Slimy!"
+SPD_MAX = 14
 
 class Couleurs():
     """
@@ -83,7 +84,8 @@ def update():
     if boss_kill: 
         stage = 0
         monde += 1
-        player.spd += 1
+        if player.spd < SPD_MAX :
+            player.spd += 1
         boss_kill = False
 
 
