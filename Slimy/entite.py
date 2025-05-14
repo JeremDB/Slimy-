@@ -1,7 +1,7 @@
 
 
 class Joueur:
-	def __init__(self, pos, pv = 100, att = 1, spd = 1, head = None, body = None, first_arm = None, second_arm = None, first_leg = None, second_leg = None, etat = None):
+	def __init__(self, pos, pv = 100, att = 1, spd = 2, head = None, body = None, first_arm = None, second_arm = None, first_leg = None, second_leg = None, etat = None):
 		self.pv = pv
 		self.att = att
 		self.spd = spd
