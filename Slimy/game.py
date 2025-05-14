@@ -34,6 +34,9 @@ class Couleurs():
 
 
     def color(c):
+        """
+        Renvoie une couleur de décor en fonction du monde actuel
+        """
         if c == "decor":
             if monde % 3 == 0:
                 return Couleurs.terre_brule
@@ -43,6 +46,9 @@ class Couleurs():
                 return Couleurs.jungle
 
     def color_contour(c):
+        """
+        Renvoie la couleur du contour des décors en fonction du monde actuel
+        """
         if c == "decor":
             if monde % 3 == 0:
                 return Couleurs.terre_brule_contour
@@ -62,12 +68,18 @@ class Couleurs():
 def update():
     global force_gravite, w, count_frame,levels,stage, a_tire, count_frame2, boss_kill, monde, anim_ciel
     """
+    Update le jeu 60 fois par seconde :
+    Défilement des niveaux, 
+    Mouvement et physique du personnage
+    Gestion des tirs
     """
     count_frame += 1
     anim_ciel += 1
+    if anim_ciel > 59:
+        anim_ciel = 0
 
     check_keys()
-
+    
     if stage < 5 :
         scrolling()
         if check_collisisons_droite() == v :
@@ -227,7 +239,6 @@ def draw():
     draw_ui()
 
 def draw_ciel():
-    global anim_ciel
     if monde % 3 == 1 :
         if anim_ciel > 30:
             screen.blit("ciel_clair",(0,0))
@@ -239,8 +250,7 @@ def draw_ciel():
     if monde % 3 == 0 :
         screen.blit("ciel_clair",(0,0))
 
-    if anim_ciel > 59:
-        anim_ciel = 0
+    
 
 
 def draw_ui():
