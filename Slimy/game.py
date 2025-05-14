@@ -83,6 +83,7 @@ def update():
     if boss_kill: 
         stage = 0
         monde += 1
+        player.spd += 1
         boss_kill = False
 
 
