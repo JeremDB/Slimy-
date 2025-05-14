@@ -79,7 +79,9 @@ def update():
         player.etat = "air"
         force_gravite = -0.2
         gravite()
-        
+
+    if check_collisions_tirs() == 2:
+        liste_tirs.remove(liste_tirs[0])
         
     if boss_kill: 
         stage = 0
@@ -172,6 +174,20 @@ def check_collisisons_gauche():
                     return v 
     return -1
 
+def check_collisions_tirs():
+    global liste_tirs
+    for tir in liste_tirs:
+        rect_tir = Rect((tir[0],tir[1]),(15,15))
+        for lvl in levels :
+            for decor in lvl.get_decors():
+                v = decor.get_pos()[0] 
+                w = decor.get_pos()[1]
+                largeur = decor.get_largeur()
+                hauteur = decor.get_hauteur()
+                rect_decor = Rect((v,w),(largeur,hauteur))
+                if pygame.Rect.colliderect(rect_tir,rect_decor):
+                    liste_tirs.remove(tir)
+    return -1
 
 def gravite():
     global force_gravite
@@ -236,7 +252,6 @@ def move_projectil():
     global liste_tirs
     for tir in liste_tirs:
         tir[0] += player.spd + 5
-
     
 def on_mouse_down(button):
     global a_tire
