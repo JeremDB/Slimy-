@@ -33,7 +33,10 @@ class Couleurs():
     noir = (0,0,0)
 
 
-    def color(c):
+    def color(c: str) -> tuple:
+        """
+        Renvoie une couleur de décor en fonction du monde actuel
+        """
         if c == "decor":
             if monde % 3 == 0:
                 return Couleurs.terre_brule
@@ -42,7 +45,10 @@ class Couleurs():
             if monde % 3 == 2:
                 return Couleurs.jungle
 
-    def color_contour(c):
+    def color_contour(c: str) -> tuple:
+        """
+        Renvoie la couleur du contour des décors en fonction du monde actuel
+        """
         if c == "decor":
             if monde % 3 == 0:
                 return Couleurs.terre_brule_contour
@@ -60,17 +66,32 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame,levels,stage, a_tire, count_frame2, boss_kill, monde
+    global force_gravite, w, count_frame,levels,stage, boss_kill, monde, anim_ciel
     """
+    Update le jeu 60 fois par seconde :
+    Défilement des niveaux, 
+    Mouvement et physique du personnage
+    Gestion des tirs
     """
     count_frame += 1
 
+    #Compteur d'image pour animer le ciel
+    anim_ciel += 1
+    if anim_ciel > 59:
+        anim_ciel = 0
+    
+    #Vérifie les inputs
     check_keys()
 
+    #Déplace les projectiles
+    move_projectil()
+    
+    #Gère le défilement des niveaux et les colisions due au défilement
     if stage < 5 :
         scrolling()
         if check_collisisons_droite() == v :
             player.pos[0] = v - largeur_player
+    #Gère la suppressions des niveaux entièrement défilée et la créations des suivants
     if levels[1].pos_x <= 0 :
         if stage == 3 :
             level.ajuste_niveaux_boss(levels,0)
@@ -79,6 +100,7 @@ def update():
             level.ajuste_niveaux(levels,0)
             stage += 1
 
+    #Permet au joueur de sauter et gère la gravité qui lui est appliqué
     if player.etat == "saut":
         gravite()
     if check_collisisons_down() == -1 : #Ne touche pas le sol
@@ -88,17 +110,19 @@ def update():
         if check_collisisons_down() == w: # si tu touche le haut d'un décor
             player.pos[1] = w - hauteur_player
             player.etat = "sol"
+            force_gravite = 2
             
-            
+    #Physique du joueur dans les airs
     if check_collisisons_top() == w and player.etat == "saut" : # Si tu touche le bas du décor
         player.pos[1] = w
         player.etat = "air"
         force_gravite = -0.2
         gravite()
 
-    if check_collisions_tirs() == 2:
-        liste_tirs.remove(liste_tirs[0])
-        
+    #Supprimes les tirs qui entrent en contact avec un décors
+    check_collisions_tirs_decor()
+
+    #Relance le défilement des niveaux après la mort du boss et augmente la vitesse du joueur
     if boss_kill: 
         stage = 1
         monde += 1
@@ -106,19 +130,17 @@ def update():
             player.spd += 1
         boss_kill = False
 
-
-    if a_tire == True:
-        move_projectil()
-    if count_frame2 >= 5 :
-        count_frame2 = 0
-    count_frame2 += 1
-
 def scrolling():
+    """
+    Fait défiler les niveaux de la vitesse du joueur
+    """
     for lvl in levels :
         lvl.scroll(player.spd)       
 
 
-def check_collisisons_down():
+def check_collisisons_down() -> float:
+    """
+    """
     global w, largeur
     x = player.pos[0]
     y = player.pos[1] + force_gravite
@@ -134,7 +156,9 @@ def check_collisisons_down():
                 return w
     return -1
 
-def check_collisisons_top():
+def check_collisisons_top() -> float:
+    """
+    """
     global w, largeur
     x = player.pos[0]
     y = player.pos[1] - force_gravite
@@ -150,7 +174,9 @@ def check_collisisons_top():
                 return w
     return -1
 
-def check_collisisons_droite():
+def check_collisisons_droite() -> float:
+    """
+    """
     global v, largeur
     x = player.pos[0]
     y = player.pos[1] 
@@ -170,7 +196,9 @@ def check_collisisons_droite():
                     return v 
     return -1
 
-def check_collisisons_gauche():
+def check_collisisons_gauche() -> float:
+    """
+    """
     global v, largeur
     x = player.pos[0]
     y = player.pos[1] 
@@ -190,7 +218,10 @@ def check_collisisons_gauche():
                     return v 
     return -1
 
-def check_collisions_tirs():
+def check_collisions_tirs_decor():
+    """
+    Vérifie les colisions entre les tirs et les décors et supprime les tirs qui entrent en contact avec un décors
+    """
     global liste_tirs
     for tir in liste_tirs:
         rect_tir = Rect(tir.pos,(taille_projectil,taille_projectil))
@@ -203,22 +234,32 @@ def check_collisions_tirs():
                 rect_decor = Rect((v,w),(largeur,hauteur))
                 if pygame.Rect.colliderect(rect_tir,rect_decor):
                     liste_tirs.remove(tir)
-    return -1
 
 def gravite():
+    """
+    Applique au personnage la force de la gravité
+    """
     global force_gravite
     player.pos[1] += force_gravite
 
 def calc_speed():
-  global force_gravite
-  v_y = force_gravite
-  v_y = v_y + 0.10*gravity
-  force_gravite = v_y
-  return
+    """
+    Calcule la force de la gravitée appliqué au personnage
+    """
+    global force_gravite
+    v_y = force_gravite
+    v_y = v_y + 0.10*gravity
+    force_gravite = v_y
 
 def draw():
     global etat_game
     """
+    Dessine les éléments a l'écran dans l'ordre : 
+    - Fond
+    - Niveaux (décors et ennemis)
+    - Joueur
+    - Projectiles
+    - UI
     """
     if etat_game == "menu":
         draw_menu()
@@ -229,10 +270,10 @@ def draw():
         draw_projectil()
         draw_ui()
 
-def draw_menu():
-    screen.blit("menu",(0,0))
-
 def draw_ciel():
+    """
+    Dessine et anime le ciel en fonction du monde actuel
+    """
     if monde % 3 == 1 :
         screen.blit("ciel_clair",(0,0))
     if monde % 3 == 2:
@@ -240,9 +281,17 @@ def draw_ciel():
     if monde % 3 == 0 :
         screen.blit("volcan",(0,0))
 
+def draw_menu():
+    """
+    Dessine le menu
+    """
+    screen.blit("menu",(0,0))
 
 
 def draw_ui():
+    """
+    Dessine l'interface utilisateur 
+    """
     screen.draw.text(("Stage :"), (25, 100), fontsize=60, color = Couleurs.noir)
     screen.draw.text((str(stage)), (170, 100), fontsize=60, color = Couleurs.noir)
     screen.draw.text(("Monde :"), (25, 150), fontsize=60, color = Couleurs.noir)
@@ -250,12 +299,18 @@ def draw_ui():
 
 
 def draw_player():
+    """
+    Dessine le sprite de Slimy! à son emplacement
+    """
     x = player.pos[0]
     y = player.pos[1]
     s = Actor("slimy", topleft=(x,y))
     s.draw()
 
 def draw_projectil():
+    """
+    Dessine les tirs
+    """
     global liste_tirs
     for tir in liste_tirs:
         x,y = tir.pos
@@ -264,6 +319,7 @@ def draw_projectil():
 
 def draw_levels():
     """
+    Pour chaque niveau, dessine l'ensemble de ses décors et de ses ennemis
     """
     for lvl in levels :
         for decor in lvl.get_decors():
@@ -272,6 +328,9 @@ def draw_levels():
             draw_ennemi(ennemi)
 
 def draw_ennemi(ennemi):
+    """
+    Dessine l'ennemi
+    """
     topleft = ennemi.pos
     taille= ennemi.taille
     couleur = (150,10,150)
@@ -279,6 +338,9 @@ def draw_ennemi(ennemi):
     screen.draw.filled_rect(rect_ennemi,couleur)
 
 def draw_decor(decor):
+    """
+    Dessine le contour du décor puis le décors en lui même 
+    """
     draw_contour(decor)
     x , y = decor.get_pos()
     x += 5
@@ -291,6 +353,9 @@ def draw_decor(decor):
     screen.draw.filled_rect(rect_decor,couleur)
 
 def draw_contour(decor):
+    """
+    Dessine le contour du décor
+    """
     topleft = decor.get_pos()
     largeur = decor.get_largeur()
     hauteur = decor.get_hauteur()
@@ -301,29 +366,39 @@ def draw_contour(decor):
 
 
 def slimy_tire():
+    """
+    Crée un tir de Slimy! à sa position actuelle
+    """
     global liste_tirs
     x,y = player.pos[0], player.pos[1]
     x += largeur_player - 5
     y += hauteur_player//2 -taille_projectil// 2
-    liste_tirs.append(entite.Projectil([x,y],((player.spd+1)*2.5)))
+    liste_tirs.append(entite.Projectil([x,y],(player.spd+6)))
 
 def move_projectil():
+    """
+    Pour chaque tir, le déplace
+    """
     global liste_tirs
     for tir in liste_tirs:
         tir.move()
     
 def on_mouse_down(button):
-    global a_tire
-    #if a_tire == False:
+    """
+    A chaque clic gauche : fait tirer Slimy!
+    """
     if button == mouse.LEFT:
         slimy_tire()
-        a_tire = True
-
+       
 def check_keys():
     global count_frame,force_gravite,boss_kill,etat_game
     """
     Verifie les touches enfoncée 
     Echap pour quitter le jeu
+    P pour tricher et compter comme avoir tué un boss
+    Space pour sauter
+    Q et D pour se déplacer
+    
     """
 
     # Echap pour quitter le jeu
@@ -368,6 +443,7 @@ w = 0
 v = 0
 count_frame2 = 0
 count_frame = 0
+anim_ciel = 0
 stage = 1
 monde = 1
 liste_tirs = []
