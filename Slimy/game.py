@@ -37,6 +37,8 @@ class Couleurs():
         """
         Renvoie une couleur de décor en fonction du monde actuel
         """
+        if c == "noir" :
+            return Couleurs.noir
         if c == "decor":
             if monde % 3 == 0:
                 return Couleurs.terre_brule
@@ -49,6 +51,8 @@ class Couleurs():
         """
         Renvoie la couleur du contour des décors en fonction du monde actuel
         """
+        if c == "noir" :
+            return Couleurs.noir
         if c == "decor":
             if monde % 3 == 0:
                 return Couleurs.terre_brule_contour
@@ -225,15 +229,19 @@ def check_collisions_tirs_decor():
     global liste_tirs
     for tir in liste_tirs:
         rect_tir = Rect(tir.pos,(taille_projectil,taille_projectil))
-        for lvl in levels :
-            for decor in lvl.get_decors():
-                v = decor.get_pos()[0] 
-                w = decor.get_pos()[1]
-                largeur = decor.get_largeur()
-                hauteur = decor.get_hauteur()
-                rect_decor = Rect((v,w),(largeur,hauteur))
-                if pygame.Rect.colliderect(rect_tir,rect_decor):
-                    liste_tirs.remove(tir)
+        if tir.pos[0] >= 1920 :
+            liste_tirs.remove(tir)
+            print(len(liste_tirs))
+        else :
+            for lvl in levels :
+                for decor in lvl.get_decors():
+                    v = decor.get_pos()[0] 
+                    w = decor.get_pos()[1]
+                    largeur = decor.get_largeur()
+                    hauteur = decor.get_hauteur()
+                    rect_decor = Rect((v,w),(largeur,hauteur))
+                    if pygame.Rect.colliderect(rect_tir,rect_decor):
+                        liste_tirs.remove(tir)
 
 def gravite():
     """
