@@ -6,19 +6,33 @@ class Ennemi:
 	Class des ennemis,
 	Propose de les faire défiler
 	"""
-	def __init__(self, pos, taille,forme, pv = 100, att_dist = 1, att_cac = 1):
+	def __init__(self, pos: list, taille: tuple, forme: str, pv: int = None, atk_dist: int = None, atk_cac:int  = None):
 		self.pv = pv
-		self.att_dist = att_dist
-		self.att_cac = att_cac
+		self.atk_dist = atk_dist
+		self.atk_cac = atk_cac
 		self.taille = taille
 		self.pos = pos
 		self.type= forme
 
-	def scroll(self, n):
+	def scroll(self, n: int):
 		"""
 		Permet de faire défiler les ennemis
 		"""
 		self.pos[0] -= n
+
+	def prend_dgt(self, n: int):
+		self.pv -= n
+
+	def est_mort(self) -> bool :
+		return self.pv <= 0
+
+	@classmethod
+	def creer_rond(cls,pos):
+		return cls(pos,(40,40),"rond",pv = 20,atk_cac = 1)
+
+	@classmethod
+	def creer_ovale_haut(cls,pos):
+		return cls(pos,(40,90),"ovale_haut",pv = 50, atk_cac = 5)
 
 
 class Boss:
@@ -26,19 +40,22 @@ class Boss:
 	Class des boss
 	Propose de les faire défiler
 	"""
-	def __init__(self, pos, loot, name, pv = 100, att_dist = 1, att_cac = 1):
+	def __init__(self, pos: int, loot: str, name: str, pv: int = None, atk_dist: int = None, atk_cac: int = None):
 		self.name = name
 		self.pv = pv
-		self.att_dist = att_dist
-		self.att_cac = att_cac
+		self.atk_dist = atk_dist
+		self.atk_cac = atk_cac
 		self.pos = pos
 		self.loot = None
 
-	def scroll(self, n):
+	def scroll(self, n: int):
 		"""
 		Permet de faire défiler les boss
 		"""
 		self.pos[0] -= n
+
+	def prend_dgt(self, n:int):
+		self.pv -= n
 
 class Decors:
 	"""
@@ -124,7 +141,7 @@ class Levels:
 """
 Décors de tailles : 
 (400,240,160,80)*1000,
-(240,160,40)*
+(240,160,80)*
 """
 
 #Premier niveau
@@ -142,8 +159,7 @@ niveau1 = Levels(
 	Decors(1440, 620, 160, 1000, 'decor','bloc'),
 	Decors(1440, 580, 280, 1000, 'decor','bloc'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')]
-	,[Ennemi([1085,660],(40,40),
-		"rond")]
+	,[Ennemi.creer_rond([1085,660])]
 	)
 	
 #Liste des niveaux boss
@@ -184,9 +200,9 @@ Levels([
 	Decors(880, 700, 240, 380, 'decor','bloc'),# commence en 880
 	Decors(1120, 700, 240, 380, 'decor','bloc'), # termine en 1360
 	Decors(1840, 700, 160, 400, 'decor','bloc')]
-	,[Ennemi([700,760],(40,40),"rond"),
-	Ennemi([990,660],(40,40),"rond"),
-	Ennemi([1245,610],(40,90),"ovale_haut")]
+	,[Ennemi.creer_rond([700,760]),
+	Ennemi.creer_rond([990,660]),
+	Ennemi.creer_ovale_haut([1245,610])]
 	),
 
 #Niveau 2
@@ -203,10 +219,10 @@ Levels([
 	Decors(400, 540, 240, 1000, 'decor','bloc'),#debut 380
 	Decors(640, 540, 240, 1000, 'decor','bloc'),#fin 860
 	Decors(1840, 700, 160, 1000, 'decor','bloc')]
-	,[Ennemi([290,540],(40,40),"rond"),
-	Ennemi([495,500],(40,40),"rond"),
-	Ennemi([710,450],(40,90),"ovale_haut"),
-	Ennemi([1490,690],(40,90),"ovale_haut")]
+	,[Ennemi.creer_rond([290,540]),
+	Ennemi.creer_rond([495,500]),
+	Ennemi.creer_ovale_haut([710,450]),
+	Ennemi.creer_ovale_haut([1490,690])]
 	)
 ]
 
