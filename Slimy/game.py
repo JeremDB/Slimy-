@@ -70,7 +70,7 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame,levels,stage, boss_kill, monde, anim_ciel
+    global force_gravite, w, count_frame,levels,stage, boss_kill, monde, anim_ciel, count_frame_inv
     """
     Update le jeu 60 fois par seconde :
     Défilement des niveaux, 
@@ -78,6 +78,11 @@ def update():
     Gestion des tirs
     """
     count_frame += 1
+    if player.invincible :
+        count_frame_inv += 1
+        if count_frame_inv > 5 :
+            player.invincible = False
+            count_frame_inv = 0
 
     #Compteur d'image pour animer le ciel
     anim_ciel += 1
@@ -87,9 +92,7 @@ def update():
     #Vérifie les inputs
     check_keys()
 
-    #Déplace les projectiles
-    move_projectil()
-    
+
     #Gère le défilement des niveaux et les colisions due au défilement
     if stage < 5 :
         scrolling()
@@ -98,11 +101,22 @@ def update():
     #Gère la suppressions des niveaux entièrement défilée et la créations des suivants
     if levels[1].pos_x <= 0 :
         if stage == 3 :
-            level.ajuste_niveaux_boss(levels,0)
+            level.ajuste_niveaux_boss(levels,levels[1].pos_x)
             stage += 1 
         else :
-            level.ajuste_niveaux(levels,0)
+            level.ajuste_niveaux(levels,levels[1].pos_x)
             stage += 1
+
+    #Déplace les projectiles
+    move_projectil()
+    projectil_touche(liste_tirs)
+    #Supprimes les tirs qui entrent en contact avec un décors
+    check_collisions_tirs_decor(liste_tirs)
+
+    #Supprime les ennemis morts :
+    ennemi_mort(levels)
+    #Vérifie si un ennemis touche le joueur
+    ennemi_contact(levels,player)
 
     #Permet au joueur de sauter et gère la gravité qui lui est appliqué
     if player.etat == "saut":
@@ -123,8 +137,6 @@ def update():
         force_gravite = -0.2
         gravite()
 
-    #Supprimes les tirs qui entrent en contact avec un décors
-    check_collisions_tirs_decor()
 
     #Relance le défilement des niveaux après la mort du boss et augmente la vitesse du joueur
     if boss_kill: 
@@ -222,16 +234,14 @@ def check_collisisons_gauche() -> float:
                     return v 
     return -1
 
-def check_collisions_tirs_decor():
+def check_collisions_tirs_decor(liste_tirs: list):
     """
     Vérifie les colisions entre les tirs et les décors et supprime les tirs qui entrent en contact avec un décors
     """
-    global liste_tirs
     for tir in liste_tirs:
         rect_tir = Rect(tir.pos,(taille_projectil,taille_projectil))
         if tir.pos[0] >= 1920 :
             liste_tirs.remove(tir)
-            print(len(liste_tirs))
         else :
             for lvl in levels :
                 for decor in lvl.get_decors():
@@ -242,6 +252,43 @@ def check_collisions_tirs_decor():
                     rect_decor = Rect((v,w),(largeur,hauteur))
                     if pygame.Rect.colliderect(rect_tir,rect_decor):
                         liste_tirs.remove(tir)
+
+def projectil_touche(liste_tirs: list):
+    """
+    Vérifie les collisions entre les tirs et les ennemis
+    """
+    pass
+    for lvl in levels :
+        for ennemi in lvl.ennemis:
+            for tir in liste_tirs:
+                rect_tir = Rect(tir.pos,(taille_projectil,taille_projectil))
+                rect_ennemi = Rect(ennemi.pos,ennemi.taille)
+                if rect_tir.colliderect(rect_ennemi):
+                    ennemi.prend_dgt(tir.atk)
+                    liste_tirs.remove(tir)
+
+def ennemi_mort(levels: list):
+    """
+    Si un ennemi est mort, le supprime de la liste des ennemis
+    """
+    for lvl in levels :
+        for ennemi in lvl.ennemis:
+            if ennemi.est_mort():
+                lvl.ennemis.remove(ennemi)
+
+def ennemi_contact(levels: list,player):
+    """
+    Si un ennemi touche le joueur, le joueur prend des dgt
+    """
+    for lvl in levels :
+        for ennemi in lvl.ennemis:
+            rect_ennemi = Rect(ennemi.pos,ennemi.taille)
+            rect_joueur = Rect(player.pos,(largeur_player,hauteur_player))
+            if rect_ennemi.colliderect(rect_joueur):
+                if not player.invincible :
+                    player.invincible = True
+                    player.prend_dgt(ennemi.atk_cac)
+
 
 def gravite():
     """
@@ -274,8 +321,8 @@ def draw():
     else:
         draw_ciel()
         draw_levels()
-        draw_player()
         draw_projectil()
+        draw_player()
         draw_ui()
 
 def draw_ciel():
@@ -295,7 +342,6 @@ def draw_menu():
     """
     screen.blit("menu",(0,0))
 
-
 def draw_ui():
     """
     Dessine l'interface utilisateur 
@@ -304,7 +350,7 @@ def draw_ui():
     screen.draw.text((str(stage)), (170, 100), fontsize=60, color = Couleurs.noir)
     screen.draw.text(("Monde :"), (25, 150), fontsize=60, color = Couleurs.noir)
     screen.draw.text((str(monde)), (200, 150), fontsize=60, color = Couleurs.noir)
-
+    screen.draw.text((str(player.pv)),(1700,150), fontsize=60,color = Couleurs.noir)
 
 def draw_player():
     """
@@ -379,9 +425,9 @@ def slimy_tire():
     """
     global liste_tirs
     x,y = player.pos[0], player.pos[1]
-    x += largeur_player - 5
+    x += largeur_player //3
     y += hauteur_player//2 -taille_projectil// 2
-    liste_tirs.append(entite.Projectil([x,y],(player.spd+6)))
+    liste_tirs.append(entite.Projectil([x,y],(player.atk*5),(player.spd+6)))
 
 def move_projectil():
     """
@@ -419,6 +465,7 @@ def check_keys():
     if keyboard.SPACE:
         if etat_game == "menu":
             etat_game = "jeu"
+            count_frame = 0
         else:
             if count_frame > 10 and player.etat == "sol":
                 force_gravite = -1
@@ -449,7 +496,7 @@ force_gravite = -1
 largeur = 0
 w = 0
 v = 0
-count_frame2 = 0
+count_frame_inv = 0
 count_frame = 0
 anim_ciel = 0
 stage = 1
