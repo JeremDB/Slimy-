@@ -1,9 +1,9 @@
 
 
 class Joueur:
-	def __init__(self, pos, pv = 100, att = 1, spd = 2, head = None, body = None, first_arm = None, second_arm = None, first_leg = None, second_leg = None, etat = None):
+	def __init__(self, pos, pv = 100, atk = 1, spd = 2, head = None, body = None, first_arm = None, second_arm = None, first_leg = None, second_leg = None, etat = None):
 		self.pv = pv
-		self.att = att
+		self.atk = atk
 		self.spd = spd
 		self.head = head
 		self.body = body
@@ -13,11 +13,19 @@ class Joueur:
 		self.second_leg = second_leg
 		self.etat = etat
 		self.pos = pos
+		self.invincible = False
+
+	def prend_dgt(self,n: int):
+		self.pv -= n
+
+	def est_mort(self) -> bool:
+		return self.pv <= 0
 
 class Projectil:
 
-	def __init__(self, pos, spd = 1):
+	def __init__(self, pos,atk,spd = 1):
 		self.pos = pos
+		self.atk = atk
 		self.spd = spd 
 
 	def move(self):
