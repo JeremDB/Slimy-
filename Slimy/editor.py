@@ -314,7 +314,7 @@ def on_mouse_down(pos, button):
         ajoute_decors(nv)
 
 def liste_decors():
-    nouveau_decors = [level.Decors(0,700,80,380,"terre"),level.Decors(1840,700,80,380,"terre")]
+    nouveau_decors = [level.Decors(0,700,80,380,"terre",None),level.Decors(1840,700,80,380,"terre",None)]
     for decor in decors :  
         decor["x"] = ((decor["x"] // 80) - 1) * 80
         decor["y"] = ((decor["y"] // 20) - 1) * 20  
@@ -371,6 +371,7 @@ def check_keys():
 
 etat_game = "menu"
 levels = level.nouveau_lvl
+#levels = level.niveau_vide
 topleft = None
 bottomright = None
 decors=[]
