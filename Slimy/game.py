@@ -273,9 +273,12 @@ def ennemi_mort(levels: list):
     """
     Si un ennemi est mort, le supprime de la liste des ennemis
     """
+    global boss_kill
     for lvl in levels :
         for ennemi in lvl.ennemis:
             if ennemi.est_mort():
+                if isinstance(ennemi, level.Boss):
+                    boss_kill = True 
                 lvl.ennemis.remove(ennemi)
 
 def ennemi_contact(levels: list,player):
