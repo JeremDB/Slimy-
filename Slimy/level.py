@@ -65,7 +65,7 @@ class Decors:
 	"""
 	Class des décors
 	"""
-	def __init__(self, x, y, largeur, hauteur, couleur,forme):
+	def __init__(self, x, y, largeur, hauteur, couleur,forme = None):
 		self.__x = x
 		self.__y = y
 		self.__forme = forme
@@ -121,6 +121,10 @@ class Levels:
 		Renvoie la liste des décors du niveau
 		"""
 		return self.decors
+
+
+	def add_decor(self,decor):
+		self.decors.append(decor)
 
 	def scroll(self,n):
 		"""
@@ -229,6 +233,18 @@ Levels([
 	Ennemi.creer_rond([495,500]),
 	Ennemi.creer_ovale_haut([710,450]),
 	Ennemi.creer_ovale_haut([1490,690])]
+	),
+Levels([
+	Decors(-80, 700, 160, 380, 'decor','bloc'),
+	Decors(120, 660, 240, 20, 'decor','plat'),
+	Decors(640, 580, 320, 20, 'decor','plat'),
+	Decors(480, 860, 160, 20, 'decor','plat'),
+	Decors(880, 780, 160, 20, 'decor','plat'),
+	Decors(1200, 740, 320, 20, 'decor','plat'),
+	Decors(1040, 520, 320, 20, 'decor','plat'),
+	Decors(1440, 640, 240, 20, 'decor','plat'),
+	Decors(1840, 700, 160, 1000, 'decor','bloc')],
+	[]
 	)
 ]
 
@@ -263,9 +279,9 @@ def ajuste_niveaux_boss(levels,pos):
 
 
 nouveau_lvl = [
-niveaux_boss[0]
+niveaux[2]
 ]
 
 
-decors_de_base = [Decors(0,700,80,380,"decor",'bloc'),Decors(1840,700,80,380,"decor",'bloc')]
+decors_de_base = [Decors(-80,700,80,1000,"decor",'bloc'),Decors(1840,700,160,1000,"decor",'bloc')]
 niveau_vide = [Levels(decors_de_base,[])]
