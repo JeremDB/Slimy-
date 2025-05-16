@@ -80,7 +80,7 @@ def update():
     count_frame += 1
     if player.invincible :
         count_frame_inv += 1
-        if count_frame_inv > 5 :
+        if count_frame_inv > 4 :
             player.invincible = False
             count_frame_inv = 0
 
@@ -144,6 +144,7 @@ def update():
         monde += 1
         if player.spd < SPD_MAX :
             player.spd += 1
+            player.atk += 1
         boss_kill = False
 
 def scrolling():
@@ -251,7 +252,8 @@ def check_collisions_tirs_decor(liste_tirs: list):
                     hauteur = decor.get_hauteur()
                     rect_decor = Rect((v,w),(largeur,hauteur))
                     if pygame.Rect.colliderect(rect_tir,rect_decor):
-                        liste_tirs.remove(tir)
+                        if tir in liste_tirs :
+                            liste_tirs.remove(tir)
 
 def projectil_touche(liste_tirs: list):
     """
@@ -417,17 +419,27 @@ def draw_contour(decor):
     rect_decor = Rect(topleft,(largeur,hauteur))
     screen.draw.filled_rect(rect_decor,couleur)
 
-
-
-def slimy_tire():
+def slimy_tire(pos):
     """
     Crée un tir de Slimy! à sa position actuelle
     """
     global liste_tirs
     x,y = player.pos[0], player.pos[1]
-    x += largeur_player //3
+    x += largeur_player // 2  - taille_projectil // 2
     y += hauteur_player//2 -taille_projectil// 2
-    liste_tirs.append(entite.Projectil([x,y],(player.atk*5),(player.spd+6)))
+    direction = [pos[0] - x, pos[1] - y]
+    direction = normalise_direction(direction)
+    liste_tirs.append(entite.Projectil([x,y],(player.atk*5),direction,(player.spd+6)))
+
+def normalise_direction(direction: list):
+    """
+    Normalise le vecteur direction pour que l'une de ses deux valeur soit égale a 1 
+    """
+    diviseur = ((direction[0]**2+direction[1]**2)**(1/2))
+    direction[0] /= diviseur
+    direction[1] /= diviseur
+
+    return direction
 
 def move_projectil():
     """
@@ -437,12 +449,12 @@ def move_projectil():
     for tir in liste_tirs:
         tir.move()
     
-def on_mouse_down(button):
+def on_mouse_down(button,pos):
     """
     A chaque clic gauche : fait tirer Slimy!
     """
     if button == mouse.LEFT:
-        slimy_tire()
+        slimy_tire(pos)
        
 def check_keys():
     global count_frame,force_gravite,boss_kill,etat_game
