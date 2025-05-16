@@ -40,11 +40,12 @@ class Boss:
 	Class des boss
 	Propose de les faire défiler
 	"""
-	def __init__(self, pos: int, loot: str, name: str, pv: int = None, atk_dist: int = None, atk_cac: int = None):
+	def __init__(self, pos: int, forme: tuple, name: str, loot: str = None, pv: int = None, atk_dist: int = None, atk_cac: int = None):
 		self.name = name
 		self.pv = pv
 		self.atk_dist = atk_dist
 		self.atk_cac = atk_cac
+		self.taille = forme 
 		self.pos = pos
 		self.loot = None
 
@@ -56,6 +57,9 @@ class Boss:
 
 	def prend_dgt(self, n:int):
 		self.pv -= n
+
+	def est_mort(self) -> bool :
+		return self.pv <= 0
 
 class Decors:
 	"""
@@ -107,7 +111,7 @@ class Levels:
 	Class des niveaux
 	Propose de les décaler entierement et de les faire défiler
 	"""
-	def __init__(self,decors,ennemis):
+	def __init__(self,decors,ennemis,boss = None):
 		self.pos_x = 1920
 		self.ennemis = ennemis
 		self.decors = decors
@@ -174,10 +178,12 @@ Levels(
 	Decors(320,660,240,1000,'decor','bloc'),
 	Decors(560, 760, 240, 1000, 'decor','bloc'),
 	Decors(800, 680, 80, 1000, 'decor','bloc'),
-	Decors(880, 780, 400, 1000, 'decor','bloc'),
-	Decors(1280, 780, 400, 1000, 'decor','bloc'),
+	Decors(880, 780, 400, 1000, 'decor','bloc'),	
+	Decors(1280, 780, 240, 1000, 'decor','bloc'),	
+	Decors(1520, 780, 160, 1000, 'decor','bloc'),	
+	Decors(1680, 780, 160, 1000, 'decor','bloc'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')]
-	,[]
+	,[Boss([1680,400],(80,400),"Roi_Gluant", pv= 250)]
 	)
 ]
 
@@ -257,7 +263,7 @@ def ajuste_niveaux_boss(levels,pos):
 
 
 nouveau_lvl = [
-niveaux[1]
+niveaux_boss[0]
 ]
 
 
