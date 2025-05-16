@@ -187,7 +187,7 @@ Levels(
 	Decors(1520, 780, 160, 1000, 'decor','bloc'),	
 	Decors(1680, 780, 160, 1000, 'decor','bloc'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')]
-	,[Boss([1680,400],(80,400),"Roi_Gluant", pv= 250)]
+	,[Boss([1680,400],(80,400),"Roi_Gluant", pv= 250, atk_cac =15 )]
 	)
 ]
 
