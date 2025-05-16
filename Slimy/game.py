@@ -147,6 +147,9 @@ def update():
             player.atk += 1
         boss_kill = False
 
+    if player.est_mort():
+        etat_game = "mort"
+
 def scrolling():
     """
     Fait défiler les niveaux de la vitesse du joueur
@@ -321,14 +324,21 @@ def draw():
     - Projectiles
     - UI
     """
-    if etat_game == "menu":
-        draw_menu()
+    if etat_game == "mort":
+        draw_mort()
     else:
-        draw_ciel()
-        draw_levels()
-        draw_projectil()
-        draw_player()
-        draw_ui()
+        if etat_game == "menu":
+            draw_menu()
+        else:
+            draw_ciel()
+            draw_levels()
+            draw_projectil()
+            draw_player()
+            draw_ui()
+
+def draw_mort():
+    screen.clear()
+
 
 def draw_ciel():
     """
@@ -500,6 +510,19 @@ def check_keys():
                 player.pos[0] = v + largeur
             else:
                 player.pos[0] = v + largeur - player.spd
+                
+    if keyboard.R:
+        if etat_game == "mort":
+            etat_game = "jeu"
+            levels = []
+            levels = level.init_niveau()
+            player = entite.Joueur([50,660],spd = 3)
+            force_gravite = -1 
+            stage = 1
+            monde = 1
+            liste_tirs = []
+            a_tire = False
+            boss_kill = False
         
 # Globals
 
