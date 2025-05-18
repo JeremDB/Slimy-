@@ -1,4 +1,4 @@
-
+ 
 import os
 import sys
 import pgzrun
@@ -70,7 +70,7 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame,levels,stage, boss_kill, monde, anim_ciel, count_frame_inv
+    global force_gravite, w, count_frame,levels,stage, boss_kill, monde, anim_ciel, count_frame_inv, etat_game
     """
     Update le jeu 60 fois par seconde :
     Défilement des niveaux, 
@@ -94,7 +94,7 @@ def update():
 
 
     #Gère le défilement des niveaux et les colisions due au défilement
-    if stage < 5 :
+    if stage < 5 and etat_game == "jeu":
         scrolling()
         if check_collisisons_droite() == v :
             player.pos[0] = v - largeur_player
@@ -113,6 +113,8 @@ def update():
     #Supprimes les tirs qui entrent en contact avec un décors
     check_collisions_tirs_decor(liste_tirs)
 
+
+    ennemi_move(levels)
     #Supprime les ennemis morts :
     ennemi_mort(levels)
     #Vérifie si un ennemis touche le joueur
@@ -271,6 +273,12 @@ def projectil_touche(liste_tirs: list):
                 if rect_tir.colliderect(rect_ennemi):
                     ennemi.prend_dgt(tir.atk)
                     liste_tirs.remove(tir)
+
+def ennemi_move(levels:list):
+    for lvl in levels:
+        for ennemi in lvl.ennemis:
+            ennemi.move()
+
 
 def ennemi_mort(levels: list):
     """
@@ -470,7 +478,7 @@ def on_mouse_down(button,pos):
         slimy_tire(pos)
        
 def check_keys():
-    global count_frame,force_gravite,boss_kill,etat_game
+    global count_frame,force_gravite,boss_kill,etat_game,player
     """
     Verifie les touches enfoncée 
     Echap pour quitter le jeu
