@@ -6,13 +6,14 @@ class Ennemi:
 	Class des ennemis,
 	Propose de les faire défiler
 	"""
-	def __init__(self, pos: list, taille: tuple, forme: str, pv: int = None, atk_dist: int = None, atk_cac:int  = None):
+	def __init__(self, pos: list, taille: tuple, forme: str, pv: int = None, atk_dist: int = None, atk_cac:int  = None,vitesse = None):
 		self.pv = pv
 		self.atk_dist = atk_dist
 		self.atk_cac = atk_cac
 		self.taille = taille
 		self.pos = pos
 		self.type= forme
+		self.vitesse= vitesse 
 
 	def scroll(self, n: int):
 		"""
@@ -26,6 +27,11 @@ class Ennemi:
 	def est_mort(self) -> bool :
 		return self.pv <= 0
 
+	def move(self) :
+		if self.vitesse != None :
+			self.pos[0] += self.vitesse[0]
+			self.pos[1] += self.vitesse[1]
+
 	@classmethod
 	def creer_rond(cls,pos):
 		return cls(pos,(40,40),"rond",pv = 20,atk_cac = 1)
@@ -33,6 +39,11 @@ class Ennemi:
 	@classmethod
 	def creer_ovale_haut(cls,pos):
 		return cls(pos,(40,90),"ovale_haut",pv = 50, atk_cac = 5)
+	
+	@classmethod
+	def creer_carapace(cls,pos):
+		return cls(pos,(60,30),"carapace",pv = 15, atk_cac = 1, vitesse = [-1,0])
+
 
 
 class Boss:
@@ -167,7 +178,7 @@ niveau1 = Levels(
 	Decors(1440, 620, 160, 1000, 'decor','bloc'),
 	Decors(1440, 580, 280, 1000, 'decor','bloc'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')]
-	,[Ennemi.creer_rond([1085,660])]
+	,[Ennemi.creer_carapace([1085,670])]
 	)
 	
 #Liste des niveaux boss
