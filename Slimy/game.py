@@ -126,6 +126,7 @@ def update():
             player.pos[1] = w - hauteur_player
             player.etat = "sol"
             force_gravite = 2
+        
             
     #Physique du joueur dans les airs
     if check_collisions_top() == w and player.etat == "saut" : # Si tu touche le bas du décor
@@ -363,7 +364,7 @@ def draw():
             draw_ui()
 
 def draw_mort():
-    screen.clear()
+    screen.blit("mort",(0,0))
 
 def draw_ciel():
     """
@@ -526,7 +527,7 @@ def check_keys():
             etat_game = "jeu"
             count_frame = 0
         else:
-            if count_frame > 10 and player.etat == "sol":
+            if count_frame > 10 and player.etat == "sol" and player.etat != "air":
                 force_gravite = -1
                 player.etat = "saut"
                 force_gravite -= 4.3
