@@ -84,11 +84,6 @@ def update():
             player.invincible = False
             count_frame_inv = 0
 
-    #Compteur d'image pour animer le ciel
-    anim_ciel += 1
-    if anim_ciel > 59:
-        anim_ciel = 0
-    
     #Vérifie les inputs
     check_keys()
 
@@ -149,6 +144,7 @@ def update():
             player.atk += 1
         boss_kill = False
 
+    sort()
     if player.est_mort():
         etat_game = "mort"
 
@@ -239,6 +235,19 @@ def check_collisisons_gauche() -> float:
                 else:
                     return v 
     return -1
+
+def sort():
+    """
+    """
+    global player
+    if player.pos[0] < 0 :
+        player.pos[0] = 0
+    if player.pos[0] > 1920 - largeur_player:
+        player.pos[0] = 1920 - largeur_player 
+    if player.pos[1] > 1080 :
+        player.pv = 0
+
+
 
 def check_collisions_tirs_decor(liste_tirs: list):
     """
@@ -346,7 +355,6 @@ def draw():
 
 def draw_mort():
     screen.clear()
-
 
 def draw_ciel():
     """
@@ -477,8 +485,17 @@ def on_mouse_down(button,pos):
     if button == mouse.LEFT:
         slimy_tire(pos)
        
+def init_game():
+    """
+    """
+    global levels, player, stage, monde
+    levels = level.init_niveau()
+    player = entite.Joueur([50,660], spd = 3)
+    stage = 1
+    monde = 1
+
 def check_keys():
-    global count_frame,force_gravite,boss_kill,etat_game,player
+    global count_frame,force_gravite,boss_kill,etat_game,player,stage,monde,levels
     """
     Verifie les touches enfoncée 
     Echap pour quitter le jeu
@@ -521,20 +538,17 @@ def check_keys():
                 
     if keyboard.R:
         if etat_game == "mort":
-            etat_game = "jeu"
             levels = []
             levels = level.init_niveau()
-            player = entite.Joueur([50,660],spd = 3)
-            force_gravite = -1 
+            player = entite.Joueur([50,660],spd = 3) 
             stage = 1
             monde = 1
-            liste_tirs = []
-            a_tire = False
-            boss_kill = False
+            etat_game = "jeu"
         
 # Globals
 
 etat_game = "menu"
+
 levels = level.init_niveau()
 player = entite.Joueur([50,660],spd = 3)
 gravity = 2
@@ -544,7 +558,6 @@ w = 0
 v = 0
 count_frame_inv = 0
 count_frame = 0
-anim_ciel = 0
 stage = 1
 monde = 1
 liste_tirs = []
