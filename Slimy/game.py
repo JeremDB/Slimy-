@@ -70,7 +70,7 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame,levels,stage, boss_kill, monde, anim_ciel, count_frame_inv, etat_game
+    global force_gravite, w, count_frame,levels,stage, boss_kill, monde, anim_ciel, count_frame_inv, etat_game, player
     """
     Update le jeu 60 fois par seconde :
     Défilement des niveaux, 
@@ -91,7 +91,7 @@ def update():
     #Gère le défilement des niveaux et les colisions due au défilement
     if stage < 5 and etat_game == "jeu":
         scrolling()
-        if check_collisisons_droite() == v :
+        if check_collisions_droite() == True :
             player.pos[0] = v - largeur_player
     #Gère la suppressions des niveaux entièrement défilée et la créations des suivants
     if levels[1].pos_x <= 0 :
@@ -118,17 +118,17 @@ def update():
     #Permet au joueur de sauter et gère la gravité qui lui est appliqué
     if player.etat == "saut":
         gravite()
-    if check_collisisons_down() == -1 : #Ne touche pas le sol
+    if check_collisions_down() == -1 : #Ne touche pas le sol
         calc_speed()
         gravite()
-    if check_collisisons_top() == -1: #Ne touche pas le bas d'un décor
-        if check_collisisons_down() == w: # si tu touche le haut d'un décor
+    if check_collisions_top() == -1: #Ne touche pas le bas d'un décor
+        if check_collisions_down() == w: # si tu touche le haut d'un décor
             player.pos[1] = w - hauteur_player
             player.etat = "sol"
             force_gravite = 2
             
     #Physique du joueur dans les airs
-    if check_collisisons_top() == w and player.etat == "saut" : # Si tu touche le bas du décor
+    if check_collisions_top() == w and player.etat == "saut" : # Si tu touche le bas du décor
         player.pos[1] = w
         player.etat = "air"
         force_gravite = -0.2
@@ -144,6 +144,10 @@ def update():
             player.atk += 1
         boss_kill = False
 
+    if sort() == True and check_collisions_droite() == True:
+        player.pv = 0
+
+
     sort()
     if player.est_mort():
         etat_game = "mort"
@@ -156,7 +160,7 @@ def scrolling():
         lvl.scroll(player.spd)       
 
 
-def check_collisisons_down() -> float:
+def check_collisions_down() -> float:
     """
     """
     global w, largeur
@@ -174,7 +178,7 @@ def check_collisisons_down() -> float:
                 return w
     return -1
 
-def check_collisisons_top() -> float:
+def check_collisions_top() -> float:
     """
     """
     global w, largeur
@@ -192,7 +196,7 @@ def check_collisisons_top() -> float:
                 return w
     return -1
 
-def check_collisisons_droite() -> float:
+def check_collisions_droite() -> float:
     """
     """
     global v, largeur
@@ -209,12 +213,14 @@ def check_collisisons_droite() -> float:
             if pygame.Rect.colliderect(rect_player,rect_decor):
                 if player.etat != "sol" and player.etat != "saut":
                     if x < v and y < w:
-                        return v
+                        v = decor.get_pos()[0]
+                        return True
                 else:
-                    return v 
+                    v = decor.get_pos()[0]
+                    return True
     return -1
 
-def check_collisisons_gauche() -> float:
+def check_collisions_gauche() -> float:
     """
     """
     global v, largeur
@@ -231,9 +237,11 @@ def check_collisisons_gauche() -> float:
             if pygame.Rect.colliderect(rect_player,rect_decor):
                 if player.etat != "sol" and player.etat != "saut" :
                     if x > v and y < w:
-                        return v
+                        v = decor.get_pos()[0]
+                        return True
                 else:
-                    return v 
+                    v = decor.get_pos()[0]
+                    return True
     return -1
 
 def sort():
@@ -242,6 +250,7 @@ def sort():
     global player
     if player.pos[0] < 0 :
         player.pos[0] = 0
+        return True 
     if player.pos[0] > 1920 - largeur_player:
         player.pos[0] = 1920 - largeur_player 
     if player.pos[1] > 1080 :
@@ -523,14 +532,14 @@ def check_keys():
                 force_gravite -= 4.3
                 count_frame = 0
     if keyboard.D:
-        if check_collisisons_droite() == -1:
+        if check_collisions_droite() == -1:
             player.pos[0] +=5
-        if check_collisisons_gauche() == v:
+        if check_collisions_gauche() == True:
             player.pos[0] = v - largeur_player
     if keyboard.Q:
-        if check_collisisons_gauche() == -1:
+        if check_collisions_gauche() == -1:
             player.pos[0] -=5
-        if check_collisisons_gauche() == v:
+        if check_collisions_gauche() == True:
             if stage == 5:
                 player.pos[0] = v + largeur
             else:
