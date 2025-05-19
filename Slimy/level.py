@@ -6,7 +6,7 @@ class Ennemi:
 	Class des ennemis,
 	Propose de les faire défiler
 	"""
-	def __init__(self, pos: list, taille: tuple, forme: str, pv: int = None, atk_dist: int = None, atk_cac:int  = None,vitesse = None):
+	def __init__(self, pos: list, taille: tuple, forme: str, pv: int = None, atk_dist: int = None, atk_cac:int  = None,vitesse: list = None):
 		self.pv = pv
 		self.atk_dist = atk_dist
 		self.atk_cac = atk_cac
@@ -51,14 +51,15 @@ class Boss:
 	Class des boss
 	Propose de les faire défiler
 	"""
-	def __init__(self, pos: int, forme: tuple, name: str, loot: str = None, pv: int = None, atk_dist: int = None, atk_cac: int = None):
+	def __init__(self, pos: int, forme: tuple, name: str, loot: str = None, pv: int = None, atk_dist: int = None, atk_cac: int = None,vitesse: list = None):
 		self.name = name
 		self.pv = pv
 		self.atk_dist = atk_dist
 		self.atk_cac = atk_cac
 		self.taille = forme 
 		self.pos = pos
-		self.loot = None
+		self.loot = loot
+		self.vitesse = vitesse
 
 	def scroll(self, n: int):
 		"""
@@ -71,6 +72,11 @@ class Boss:
 
 	def est_mort(self) -> bool :
 		return self.pv <= 0
+
+	def move(self) :
+		if self.vitesse != None :
+			self.pos[0] += self.vitesse[0]
+			self.pos[1] += self.vitesse[1]
 
 class Decors:
 	"""
@@ -215,8 +221,8 @@ Levels([
 	Decors(960, 380, 240, 20, 'decor','plat'),
 	Decors(1360, 840, 160, 20, 'decor','plat'),
 	Decors(1560, 780, 80, 20, 'decor','plat'),
-	Decors(1680, 740, 160, 20, 'decor','plat'),
-	Decors(1360, 360, 240, 20, 'decor','plat'),
+	Decors(1680, 720, 160, 20, 'decor','plat'),
+	Decors(1360, 340, 240, 20, 'decor','plat'),
 	Decors(80, 700, 400, 420, 'decor','bloc'),# termine en 480
 	Decors(880, 700, 240, 380, 'decor','bloc'),# commence en 880
 	Decors(1120, 700, 240, 380, 'decor','bloc'), # termine en 1360
@@ -245,6 +251,7 @@ Levels([
 	Ennemi.creer_ovale_haut([710,450]),
 	Ennemi.creer_ovale_haut([1490,690])]
 	),
+#Niveau 3
 Levels([
 	Decors(-80, 700, 160, 380, 'decor','bloc'),
 	Decors(120, 660, 240, 20, 'decor','plat'),
@@ -265,7 +272,7 @@ def init_niveau():
 	"""
 	niv2 = deepcopy(niveaux[randint(0,len(niveaux)-1)])
 	niv2.decalage(0)
-	return [niveau1, niv2]
+	return [deepcopy(niveau1), niv2]
 
 def ajuste_niveaux(levels,pos):
 	"""
