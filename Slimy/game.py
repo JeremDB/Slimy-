@@ -348,9 +348,9 @@ def draw():
             draw_menu()
         else:
             draw_ciel()
-            draw_levels()
             draw_projectil()
             draw_player()
+            draw_levels()
             draw_ui()
 
 def draw_mort():
@@ -541,6 +541,7 @@ def check_keys():
             levels = []
             levels = level.init_niveau()
             player = entite.Joueur([50,660],spd = 3) 
+            force_gravite = -1
             stage = 1
             monde = 1
             etat_game = "jeu"
