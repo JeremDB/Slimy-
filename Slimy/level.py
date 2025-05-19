@@ -231,7 +231,6 @@ Levels([
 	Ennemi.creer_rond([990,660]),
 	Ennemi.creer_ovale_haut([1245,610])]
 	),
-
 #Niveau 2
 Levels([
 	Decors(-80, 700, 160, 380, 'decor','bloc'),
@@ -253,7 +252,7 @@ Levels([
 	),
 #Niveau 3
 Levels([
-	Decors(-80, 700, 160, 380, 'decor','bloc'),
+	Decors(-80, 700, 160, 1000, 'decor','bloc'),
 	Decors(120, 660, 240, 20, 'decor','plat'),
 	Decors(640, 580, 320, 20, 'decor','plat'),
 	Decors(480, 860, 160, 20, 'decor','plat'),
@@ -263,6 +262,21 @@ Levels([
 	Decors(1440, 640, 240, 20, 'decor','plat'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')],
 	[]
+	),
+Levels([
+	Decors(-80,700,160,1000,'decor','bloc'),
+	Decors(80,700,160,1000,'decor','bloc'),
+	Decors(240,640,240,1000,'decor','bloc'),
+	Decors(480,580,160,1000,'decor','bloc'),
+	Decors(640,500,160,1000,'decor','bloc'),
+	Decors(800,800,240,20,'decor','plat'),
+	Decors(1160,740,160,20,'decor','plat'),
+	Decors(1000,420,240,20,'decor','plat'),
+	Decors(1380,440,160,20,'decor','plat'),
+	Decors(1600,720,240,20,'decor','plat'),
+	Decors(1840,700,160,1000,'decor','bloc')],
+	[Ennemi.creer_rond([340,600]),
+	Ennemi.creer_ovale_haut([1090,330])]
 	)
 ]
 
@@ -297,7 +311,7 @@ def ajuste_niveaux_boss(levels,pos):
 
 
 nouveau_lvl = [
-niveaux[2]
+niveaux[3]
 ]
 
 
