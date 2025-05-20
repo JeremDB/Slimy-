@@ -421,13 +421,14 @@ def draw_levels():
     Pour chaque niveau, dessine l'ensemble de ses décors et de ses ennemis
     """
     for lvl in levels :
-        for decor in lvl.get_decors():
-            draw_decor(decor)
         if lvl.boss == True :
-            draw_boss(lvl.ennemis[0])
+            if lvl.ennemis != []:
+                draw_boss(lvl.ennemis[0])
         else :
             for ennemi in lvl.ennemis :
                 draw_ennemi(ennemi)
+        for decor in lvl.get_decors():
+            draw_decor(decor)
 
 def draw_ennemi(ennemi):
     """
@@ -439,14 +440,15 @@ def draw_ennemi(ennemi):
     rect_ennemi = Rect(topleft,taille)
     screen.draw.filled_rect(rect_ennemi,couleur)
 
-def draw_boss(boss : "Boss"):
+def draw_boss(boss : list):
     """
     Dessine les boss
     """
     print('dessine_boss')
     if boss.name == 'Roi_Gluant':
-        pos = boss.pos
-        b = Actor('roi_gluant', topleft = pos)
+        x = boss.pos[0] -320
+        y = boss.pos[1] 
+        b = Actor('roi_gluant', topleft = (x,y))
         b.draw()
 
 def draw_decor(decor):
