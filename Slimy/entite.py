@@ -28,6 +28,9 @@ class Projectil:
 		self.spd = spd 
 		self.taille = taille
 
+	def deplacer(self,pos):
+		self.pos = pos
+
 	def move(self):
 		self.pos[0] += self.spd*self.direction[0]
 		self.pos[1] += self.spd*self.direction[1]
