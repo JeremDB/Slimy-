@@ -195,8 +195,7 @@ niveau1 = Levels(
 	Decors(480, 700, 400, 1000, 'decor','bloc'),
 	Decors(880, 700, 400, 1000, 'decor','bloc'),
 	Decors(1280, 620, 160, 1000, 'decor','bloc'),
-	Decors(1440, 620, 160, 1000, 'decor','bloc'),
-	Decors(1440, 580, 280, 1000, 'decor','bloc'),
+	Decors(1440, 580, 240, 1000, 'decor','bloc'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')]
 	,[Ennemi.creer_carapace([1085,670])], 
 	)
@@ -236,7 +235,7 @@ Levels(
 	Decors(820,420,160,20,'decor','plat'),
 	Decors(980,420,160,20,'decor','plat'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')],
-	[Boss([1680,600],(80,230),"Roi_Gluant", pv= 250, atk_cac =15 )],
+	[Boss([1680,600],(80,230),"Gluant_Bulle", pv= 250, atk_cac =15,couldown = 180)],
 	boss = True
 	),
 #Agluantin
@@ -249,7 +248,7 @@ Levels(
 	Decors(860,420,240,20,'decor','plat'),
 	Decors(1180,300,240,20,'decor','plat'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')],
-	[Boss([1680,120],(80,1000),"Roi_Gluant", pv= 250, atk_cac =15 )],
+	[Boss([1680,120],(80,1000),"Agluantin", pv= 250, atk_cac =15,couldown = 15)],
 	boss = True
 	)
 ]
