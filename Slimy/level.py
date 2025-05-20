@@ -228,14 +228,15 @@ Levels(
 	Decors(320,660,400,1000,'decor','bloc'),
 	Decors(720,700,400,1000,'decor','bloc'),
 	Decors(1120,700,400,1000,'decor','bloc'),
-	Decors(1520,700,320,1000,'decor','bloc'),
+	Decors(1520,700,160,1000,'decor','bloc'),
+	Decors(1680,700,160,1000,'decor','bloc'),
 	Decors(620,540,240,20,'decor','plat'),
 	Decors(860,540,240,20,'decor','plat'),
 	Decors(1100,540,240,20,'decor','plat'),
 	Decors(820,420,160,20,'decor','plat'),
 	Decors(980,420,160,20,'decor','plat'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')],
-	[Boss([1680,600],(80,230),"Gluant_Bulle", pv= 250, atk_cac =15,couldown = 90)],
+	[Boss([1680,570],(80,230),"Gluant_Bulle", pv= 250, atk_cac =15,couldown = 90)],
 	boss = True
 	),
 #Agluantin
@@ -243,7 +244,8 @@ Levels(
 	[Decors(-80, 700, 160, 1000, 'decor','bloc'),
 	Decors(80,700,240,1000,'decor','bloc'),
 	Decors(320,660,240,1000,'decor','bloc'),
-	Decors(1520,700,320,1000,'decor','bloc'),
+	Decors(1520,700,160,1000,'decor','bloc'),
+	Decors(1680,700,160,1000,'decor','bloc'),
 	Decors(540,540,240,20,'decor','plat'),
 	Decors(860,420,240,20,'decor','plat'),
 	Decors(1180,300,240,20,'decor','plat'),
@@ -268,10 +270,10 @@ Levels([
 	Decors(1560, 780, 80, 20, 'decor','plat'),
 	Decors(1680, 720, 160, 20, 'decor','plat'),
 	Decors(1360, 340, 240, 20, 'decor','plat'),
-	Decors(80, 700, 400, 420, 'decor','bloc'),# termine en 480
-	Decors(880, 700, 240, 380, 'decor','bloc'),# commence en 880
-	Decors(1120, 700, 240, 380, 'decor','bloc'), # termine en 1360
-	Decors(1840, 700, 160, 400, 'decor','bloc')]
+	Decors(80, 700, 400, 1000, 'decor','bloc'),# termine en 480
+	Decors(880, 700, 240, 1000, 'decor','bloc'),# commence en 880
+	Decors(1120, 700, 240, 1000, 'decor','bloc'), # termine en 1360
+	Decors(1840, 700, 160, 1000, 'decor','bloc')]
 	,[Ennemi.creer_rond([700,760]),
 	Ennemi.creer_rond([990,660]),
 	Ennemi.creer_ovale_haut([1245,610])]
@@ -299,11 +301,14 @@ Levels([
 Levels([
 	Decors(-80, 700, 160, 1000, 'decor','bloc'),
 	Decors(120, 660, 240, 20, 'decor','plat'),
-	Decors(640, 580, 320, 20, 'decor','plat'),
+	Decors(640, 580, 160, 20, 'decor','plat'),
+	Decors(800, 580, 160, 20, 'decor','plat'),
 	Decors(480, 860, 160, 20, 'decor','plat'),
 	Decors(880, 780, 160, 20, 'decor','plat'),
-	Decors(1200, 740, 320, 20, 'decor','plat'),
-	Decors(1040, 520, 320, 20, 'decor','plat'),
+	Decors(1200, 740, 160, 20, 'decor','plat'),
+	Decors(1360, 740, 160, 20, 'decor','plat'),
+	Decors(1040, 520, 160, 20, 'decor','plat'),
+	Decors(1200, 520, 160, 20, 'decor','plat'),
 	Decors(1440, 640, 240, 20, 'decor','plat'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')],
 	[]
@@ -344,6 +349,23 @@ Levels([
 	Ennemi.creer_rond([860,500]),
 	Ennemi.creer_ovale_haut([1420,770]),
 	Ennemi.creer_ovale_haut([1720,670])]
+	),
+#Niveau 6
+Levels([
+	Decors(-80,700,160,1000,'decor','bloc'),
+	Decors(80,700,400,1000,'decor','bloc'),
+	Decors(480,560,80,1000,'decor','bloc'),
+	Decors(560,820,400,1000,'decor','bloc'),
+	Decors(960,700,240,1000,'decor','bloc'),
+	Decors(1200,700,400,1000,'decor','bloc'),
+	Decors(1600,700,160,1000,'decor','bloc'),
+	Decors(1760,560,80,1000,'decor','bloc'),
+	Decors(1840,700,160,1000,'decor','bloc')],
+	[Ennemi.creer_carapace([320,670]),
+	Ennemi.creer_ovale_haut([880,730]),
+	Ennemi.creer_carapace([1440,670]),
+	Ennemi.creer_carapace([1570,670]),
+	]
 	)
 ]
 
@@ -378,7 +400,7 @@ def ajuste_niveaux_boss(levels,pos,monde):
 
 
 nouveau_lvl = [
-niveaux_boss[1]
+niveaux[5]
 ]
 
 
