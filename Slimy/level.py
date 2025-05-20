@@ -132,6 +132,7 @@ class Levels:
 		self.pos_x = 1920
 		self.ennemis = ennemis
 		self.decors = decors
+		self.boss = boss
 
 	def get_decors(self):
 		"""
@@ -184,7 +185,7 @@ niveau1 = Levels(
 	Decors(1440, 620, 160, 1000, 'decor','bloc'),
 	Decors(1440, 580, 280, 1000, 'decor','bloc'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')]
-	,[Ennemi.creer_carapace([1085,670])]
+	,[Ennemi.creer_carapace([1085,670])], 
 	)
 	
 #Liste des niveaux boss
@@ -204,7 +205,8 @@ Levels(
 	Decors(1520, 780, 160, 1000, 'decor','bloc'),	
 	Decors(1680, 780, 160, 1000, 'decor','bloc'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')]
-	,[Boss([1680,400],(80,400),"Roi_Gluant", pv= 250, atk_cac =15 )]
+	,[Boss([1680,400],(80,400),"Roi_Gluant", pv= 250, atk_cac =15 )],
+	boss = True
 	)
 ]
 
