@@ -6,7 +6,7 @@ import pygame
 import level
 from random import randint, choice
 import entite
-
+from math import sin, cos
 
 WIDTH = 1920
 HEIGHT = 1080
@@ -15,6 +15,7 @@ SPD_MAX = 14
 hauteur_player = 40
 largeur_player = 50
 taille_projectil = 15
+ZONES_AGLU = (680,560,400,260)
 
 class Couleurs():
     """
@@ -71,7 +72,7 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame,levels,stage, boss_kill, monde, anim_ciel, count_frame_inv, etat_game, player,laser_tir,charge_laser,tirs_ennemis
+    global force_gravite, w, count_frame,levels,stage, boss_kill, monde, anim_ciel, count_frame_inv, etat_game, player,laser_tir,charge_laser,tirs_ennemis,bulles, timer_zone_aglu, zone_aglu
     """
     Update le jeu 60 fois par seconde :
     Défilement des niveaux, 
@@ -109,22 +110,34 @@ def update():
         projectil_touche(liste_tirs)
         #Supprimes les tirs qui entrent en contact avec un décors
         check_collisions_tirs_decor(liste_tirs)
-        check_tirs_ennemis_out(tirs_ennemis)
+        check_collisions_tirs_ennemis_decor()
 
         ennemi_move(levels)
         ennemi_tir(levels)
         if laser_tir : 
             charge_laser += 1
             
-            if charge_laser >= 15 :
+            if charge_laser >= 45 :
                 tirer_laser()
                 charge_laser = 0
                 laser_tir = False
+        if monde % 3 == 2 and stage == 5 :
+            tirer_bulle(levels[0].ennemis[0]) 
+            move_bulles(bulles)
+        if monde % 3 == 0 and stage == 5:
+            timer_zone_aglu += 1 
+            print(timer_zone_aglu)
+            if timer_zone_aglu > 240 :
+                print("changement_zone")
+                zone_aglu = randint(0,3)
+                timer_zone_aglu = 0
+            aglu_tire(levels[0].ennemis[0])
+
         #Supprime les ennemis morts :
         ennemi_mort(levels)
         #Vérifie si un ennemis touche le joueur
         ennemi_contact(levels,player)
-
+        bulles_touche(bulles)
         projectil_touche_player(tirs_ennemis)
 
         #Permet au joueur de sauter et gère la gravité qui lui est appliqué
@@ -159,6 +172,7 @@ def update():
 
     if sort() == True and check_collisions_droite() == True:
         player.pv = 0
+
 
 
     sort()
@@ -289,14 +303,29 @@ def check_collisions_tirs_decor(liste_tirs: list):
                         if tir in liste_tirs :
                             liste_tirs.remove(tir)
 
-def check_tirs_ennemis_out(tirs_ennemis: list):
+def check_collisions_tirs_ennemis_decor():
     """
     Vérifie les colisions entre les tirs et les décors et supprime les tirs qui entrent en contact avec un décors
     """
     for tir in tirs_ennemis:
-        if tir.pos[0] >= 1920  or (tir.pos[0] + tir.taille[0]) <= 0:
+        rect_tir = Rect(tir.pos,(taille_projectil,taille_projectil))
+        if (tir.pos[0] + tir.taille[0]) < 0 :
             tirs_ennemis.remove(tir)
-
+        else :
+            for lvl in levels :
+                for decor in lvl.get_decors():
+                    v = decor.get_pos()[0] 
+                    w = decor.get_pos()[1]
+                    largeur = decor.get_largeur()
+                    hauteur = decor.get_hauteur()
+                    rect_decor = Rect((v,w),(largeur,hauteur))
+                    if pygame.Rect.colliderect(rect_tir,rect_decor):
+                        if tir in tirs_ennemis :
+                            tirs_ennemis.remove(tir)
+    for bulle in bulles:
+        tir = bulle[0]
+        if (tir.pos[0]+ tir.taille[0]) <= 0: 
+            bulles.remove(bulle)
 
 def projectil_touche(liste_tirs: list):
     """
@@ -323,6 +352,15 @@ def projectil_touche_player(tirs_ennemis: list):
             player.prend_dgt(tir.atk)
             player.invincible = True
 
+def bulles_touche(bulles):
+    for bulle in bulles:
+        tir = bulle[0]
+        rect_tir = Rect(tir.pos,tir.taille)
+        rect_joueur = Rect(player.pos,(largeur_player,hauteur_player))
+        if rect_tir.colliderect(rect_joueur) and not player.invincible:
+            player.prend_dgt(tir.atk)
+            bulles.remove(bulle)
+            player.invincible = True
 
 def ennemi_move(levels:list):
     for lvl in levels:
@@ -339,7 +377,7 @@ def boss_tir(boss):
     if boss.peut_tirer :
         if boss.name == 'Roi_Gluant' :
             laser_tir = True
-            pos_laser = choice((250,370,490,610))
+            pos_laser = choice((250,390,510,630))
             boss.peut_tirer = False
     else : 
         boss.rise_couldown()
@@ -350,7 +388,7 @@ def charger_laser():
 
 def tirer_laser():
     global tirs_ennemis
-    pos = [1500,(pos_laser)-20]
+    pos = [1500,(pos_laser)-40]
     tirs_ennemis.append(entite.Projectil(pos,( 20),[-1,0],80,taille = (700,80)))
 
 def ennemi_mort(levels: list):
@@ -377,6 +415,40 @@ def ennemi_contact(levels: list,player):
                 if not player.invincible :
                     player.invincible = True
                     player.prend_dgt(ennemi.atk_cac)
+
+def aglu_tire(boss):
+    if boss.peut_tirer :
+        x = 1660
+        y = ZONES_AGLU[zone_aglu]
+        y -= randint(5,95)
+        tirs_ennemis.append(entite.Projectil([x,y],15,(-1,0),spd = 7,taille= (15,15)))
+        boss.peut_tirer = False
+    else :
+        boss.rise_couldown()
+
+def tirer_bulle(boss):
+    if boss.peut_tirer :
+        pos = choice(([1600,600],[1630,470],[1690,350]))
+        bulles.append([entite.Projectil(pos,15,None,taille=(42,42)),
+            #randint(1,3)
+            3
+            ,pos[1]])
+        print("bulle")
+        boss.peut_tirer = False
+    else :
+        boss.rise_couldown()
+
+def move_bulles(bulles):
+    for bulle in bulles:
+        if bulle[1] == 1 :
+            pos = bulle[0].pos
+            bulle[0].deplacer([pos[0]-1,(sin(pos[0]/20)*14)+bulle[2]])
+        if bulle[1] == 2 :
+            pos = bulle[0].pos
+            bulle[0].deplacer([pos[0]-1,(cos(pos[0]/12)*17)+bulle[2]])
+        if bulle[1] == 3 :
+            pos = bulle[0].pos
+            bulle[0].deplacer([pos[0]-1,(sin(pos[0]/20)*cos(pos[0]/15)*25)+bulle[2]])
 
 def gravite():
     """
@@ -478,7 +550,14 @@ def draw_tirs_ennemis():
         pos = tir.pos
         taille = tir.taille
         rect_tir= Rect(pos,taille)
+        screen.draw.filled_rect(rect_tir,Couleurs.laser)    
+    for tir in bulles:
+        tir = tir[0]
+        pos = tir.pos
+        taille = tir.taille
+        rect_tir= Rect(pos,taille)
         screen.draw.filled_rect(rect_tir,Couleurs.laser)
+
 
 def draw_levels():
     """
@@ -553,6 +632,19 @@ def draw_bloc(decor):
         d = Actor('sol_400',topleft = (x,y))
         d.draw()
 
+    if decor.get_largeur() == 240 :
+        d = Actor('sol_240',topleft = (x,y))
+        d.draw()
+
+    if decor.get_largeur() == 160 :
+        d = Actor('sol_160',topleft = (x,y))
+        d.draw()
+
+    if decor.get_largeur() == 80 :
+        d = Actor('sol_80',topleft = (x,y))
+        d.draw()
+
+
 def draw_plat(decor): 
     """
     Dessine les decors de type plat
@@ -608,7 +700,7 @@ def init_game():
     monde = 1
 
 def check_keys():
-    global count_frame,force_gravite,boss_kill,etat_game,player,stage,monde,levels, tirs_ennemis
+    global count_frame,force_gravite,boss_kill,etat_game,player,stage,monde,levels, tirs_ennemis, bulles
     """
     Verifie les touches enfoncée 
     Echap pour quitter le jeu
@@ -625,7 +717,7 @@ def check_keys():
     if keyboard.M :
         boss_kill = True
     
-    if keyboard.P :
+    if keyboard.P and player :
         etat_game = "pause"
 
     if keyboard.SPACE:  
@@ -667,13 +759,14 @@ def check_keys():
             monde = 1
             etat_game = "jeu"
             tirs_ennemis = []
+            bulles = []
         
 # Globals
 
 etat_game = "menu"
 
 levels = level.init_niveau()
-player = entite.Joueur([50,660],spd = 3)
+player = entite.Joueur([50,660],spd = 5)
 gravity = 2
 force_gravite = -1 
 largeur = 0
@@ -682,7 +775,7 @@ v = 0
 count_frame_inv = 0
 count_frame = 0
 stage = 1
-monde = 1
+monde = 3
 liste_tirs = []
 tirs_ennemis = []
 pos_laser = None
@@ -690,7 +783,9 @@ laser_tir = False
 charge_laser = 0
 a_tire = False
 boss_kill = False
-
+bulles = []
+timer_zone_aglu = 1
+zone_aglu = 0
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 pgzrun.go()
