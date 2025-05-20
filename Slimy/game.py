@@ -166,6 +166,7 @@ def update():
         stage = 1
         monde += 1
         bulles = []
+        tirs_ennemis = []
         if player.spd < SPD_MAX :
             player.spd += 1
             player.atk += 1
@@ -608,10 +609,15 @@ def draw_projectil():
 
 def draw_tirs_ennemis():
     for tir in tirs_ennemis:
-        pos = tir.pos
-        taille = tir.taille
-        rect_tir= Rect(pos,taille)
-        screen.draw.filled_rect(rect_tir,Couleurs.laser)    
+        if stage == 5 and monde % 3 == 0:
+            pos = tir.pos
+            f = Actor('feu',topleft = pos)
+            f.draw()
+        else:
+            pos = tir.pos
+            taille = tir.taille
+            rect_tir= Rect(pos,taille)
+            screen.draw.filled_rect(rect_tir,Couleurs.laser)    
     for tir in bulles:
         draw_bulle(tir[0])
 
