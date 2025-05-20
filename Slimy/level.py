@@ -51,14 +51,15 @@ class Boss:
 	Class des boss
 	Propose de les faire défiler
 	"""
-	def __init__(self, pos: int, forme: tuple, name: str, loot: str = None, pv: int = None, atk_dist: int = None, atk_cac: int = None,vitesse: list = None):
+	def __init__(self, pos: int, forme: tuple, name: str, loot: str = None, pv: int = None, atk_dist: int = None, atk_cac: int = None,vitesse: list = None, couldown = None):
 		self.name = name
 		self.pv = pv
 		self.atk_dist = atk_dist
 		self.atk_cac = atk_cac
 		self.taille = forme 
 		self.peut_tirer = True
-		self.couldown = 0
+		self.couldown = couldown
+		self.timer_couldown = 0
 		self.pos = pos
 		self.loot = loot
 		self.vitesse = vitesse
@@ -77,9 +78,9 @@ class Boss:
 
 	def rise_couldown(self):
 		if not self.peut_tirer: 	
-			self.couldown += 1 
-		if self.couldown > 120 :
-			self.couldown = 0
+			self.timer_couldown += 1 
+		if self.timer_couldown > self.couldown :
+			self.timer_couldown = 0
 			self.peut_tirer = True
 
 	def move(self) :
@@ -209,8 +210,8 @@ Levels(
 	Decors(840, 440, 160, 20, 'decor','plat'),
 	Decors(1000, 560, 160, 20, 'decor','plat'),
 	Decors(1000, 320, 240, 20, 'decor','plat'),
-	Decors(80, 660, 240, 1000, 'decor','bloc'),
-	Decors(320,660,240,1000,'decor','bloc'),
+	Decors(80, 680, 240, 1000, 'decor','bloc'),
+	Decors(320,680,240,1000,'decor','bloc'),
 	Decors(560, 760, 240, 1000, 'decor','bloc'),
 	Decors(800, 680, 80, 1000, 'decor','bloc'),
 	Decors(880, 780, 400, 1000, 'decor','bloc'),	
@@ -218,7 +219,7 @@ Levels(
 	Decors(1520, 780, 160, 1000, 'decor','bloc'),	
 	Decors(1680, 780, 160, 1000, 'decor','bloc'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')]
-	,[Boss([1680,400],(80,430),"Roi_Gluant", pv= 250, atk_cac =15 )],
+	,[Boss([1680,400],(80,430),"Roi_Gluant", pv= 250, atk_cac =15, couldown = 75 )],
 	boss = True
 	),
 #Gluant_Bulle
