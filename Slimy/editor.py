@@ -245,19 +245,37 @@ def draw_projectil():
 
 def draw_levels():
     """
+    Pour chaque niveau, dessine l'ensemble de ses décors et de ses ennemis
     """
     for lvl in levels :
-        for decor in lvl.get_decors():
-            draw_decor(decor)
+        if lvl.boss == True :
+            if lvl.ennemis != []:
+                draw_boss(lvl.ennemis[0])
         for ennemi in lvl.ennemis :
             draw_ennemi(ennemi)
+        for decor in lvl.get_decors():
+            draw_decor(decor)
+
 
 def draw_ennemi(ennemi):
+    """
+    Dessine l'ennemi
+    """
     topleft = ennemi.pos
     taille= ennemi.taille
     couleur = (150,10,150)
     rect_ennemi = Rect(topleft,taille)
     screen.draw.filled_rect(rect_ennemi,couleur)
+
+def draw_boss(boss : list):
+    """
+    Dessine les boss
+    """
+    if boss.name == 'Roi_Gluant':
+        x = boss.pos[0] -320
+        y = boss.pos[1] 
+        b = Actor('roi_gluant', topleft = (x,y))
+        b.draw()
 
 def draw_decor(decor):
     draw_contour(decor)
