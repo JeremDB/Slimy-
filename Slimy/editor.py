@@ -1,4 +1,5 @@
 
+
 import os
 import sys
 import pgzrun
@@ -6,7 +7,7 @@ import pygame
 import level
 from random import randint, choice
 import entite
-
+from math import sin, cos
 
 WIDTH = 1920
 HEIGHT = 1080
@@ -15,6 +16,7 @@ SPD_MAX = 14
 hauteur_player = 40
 largeur_player = 50
 taille_projectil = 15
+ZONES_AGLU = (680,560,400,260)
 
 class Couleurs():
     """
@@ -22,6 +24,7 @@ class Couleurs():
     Contient les constantes des couleurs utilisés
     """
     fond = (150,207,255)
+    laser = (200,120,210)
     terre = (150,90,20)
     jungle = (100,120,20)
     terre_brule = (110,50,10)
@@ -33,7 +36,12 @@ class Couleurs():
     noir = (0,0,0)
 
 
-    def color(c):
+    def color(c: str) -> tuple:
+        """
+        Renvoie une couleur de décor en fonction du monde actuel
+        """
+        if c == "noir" :
+            return Couleurs.noir
         if c == "decor":
             if monde % 3 == 0:
                 return Couleurs.terre_brule
@@ -42,7 +50,12 @@ class Couleurs():
             if monde % 3 == 2:
                 return Couleurs.jungle
 
-    def color_contour(c):
+    def color_contour(c: str) -> tuple:
+        """
+        Renvoie la couleur du contour des décors en fonction du monde actuel
+        """
+        if c == "noir" :
+            return Couleurs.noir
         if c == "decor":
             if monde % 3 == 0:
                 return Couleurs.terre_brule_contour
@@ -60,7 +73,7 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame,levels,stage, a_tire, count_frame2, boss_kill, monde
+    global force_gravite, w, count_frame,levels,stage, boss_kill, monde, anim_ciel, count_frame_inv, etat_game, player,laser_tir,charge_laser,tirs_ennemis,bulles, timer_zone_aglu, zone_aglu
     """
     """
     count_frame += 1
@@ -95,11 +108,27 @@ def update():
         boss_kill = False
 
 
-    if a_tire == True:
-        move_projectil()
-    if count_frame2 >= 5 :
-        count_frame2 = 0
-    count_frame2 += 1
+    move_projectil()
+    ennemi_tir(levels)
+    if laser_tir : 
+        charge_laser += 1 
+        if charge_laser >= 45 :
+            tirer_laser()
+            charge_laser = 0
+            laser_tir = False
+
+    if monde % 3 == 2 and stage == 5 :
+        tirer_bulle(levels[0].ennemis[0]) 
+        move_bulles(bulles)
+
+    if monde % 3 == 0 and stage == 5:
+        timer_zone_aglu += 1 
+        if timer_zone_aglu > 240 :
+            zone_aglu = randint(0,3)
+            timer_zone_aglu = 0
+        aglu_tire(levels[0].ennemis[0])
+
+    check_collisions_tirs_ennemis_decor(tirs_ennemis)
 
 def scrolling():
     for lvl in levels :
@@ -194,6 +223,30 @@ def check_collisions_tirs():
                     liste_tirs.remove(tir)
     return -1
 
+def ennemi_tir(levels:list):
+    for lvl in levels :
+        if lvl.boss and lvl.ennemis != [] :
+            boss_tir(lvl.ennemis[0])
+
+def boss_tir(boss):
+    global laser_tir,pos_laser
+    if boss.peut_tirer :
+        if monde % 3 == 1 :
+            laser_tir = True
+            pos_laser = choice((250,370,490,610))
+            boss.peut_tirer = False
+    else : 
+        boss.rise_couldown()
+
+def charger_laser():
+    pos = (1500,pos_laser)
+    screen.draw.filled_circle(pos,50,Couleurs.laser)
+
+def tirer_laser():
+    global tirs_ennemis
+    pos = [1500,(pos_laser)-40]
+    tirs_ennemis.append(entite.Projectil(pos,( 20),[-1,0],80,taille = (700,80)))
+
 def gravite():
     global force_gravite
     player.pos[1] += force_gravite
@@ -205,12 +258,68 @@ def calc_speed():
   force_gravite = v_y
   return
 
+def check_collisions_tirs_ennemis_decor(tirs_ennemis: list):
+    """
+    Vérifie les colisions entre les tirs et les décors et supprime les tirs qui entrent en contact avec un décors
+    """
+    for tir in tirs_ennemis:
+        rect_tir = Rect(tir.pos,(taille_projectil,taille_projectil))
+        if (tir.pos[0] + tir.taille[0]) < 0 :
+            tirs_ennemis.remove(tir)
+        else :
+            for lvl in levels :
+                for decor in lvl.get_decors():
+                    v = decor.get_pos()[0] 
+                    w = decor.get_pos()[1]
+                    largeur = decor.get_largeur()
+                    hauteur = decor.get_hauteur()
+                    rect_decor = Rect((v,w),(largeur,hauteur))
+                    if pygame.Rect.colliderect(rect_tir,rect_decor):
+                        if tir in tirs_ennemis :
+                            tirs_ennemis.remove(tir)
+def aglu_tire(boss):
+    if boss.peut_tirer :
+        x = 1660
+        y = ZONES_AGLU[zone_aglu]
+        y -= randint(5,95)
+        tirs_ennemis.append(entite.Projectil([x,y],15,(-1,0),spd = 7,taille= (15,15)))
+        boss.peut_tirer = False
+    else :
+        boss.rise_couldown()
+
+def tirer_bulle(boss):
+    if boss.peut_tirer :
+        pos = choice(([1600,600],[1630,470],[1690,350]))
+        bulles.append([entite.Projectil(pos,15,None,taille=(42,42)),
+            #randint(1,3)
+            3
+            ,pos[1]])
+        print("bulle")
+        boss.peut_tirer = False
+    else :
+        boss.rise_couldown()
+
+def move_bulles(bulles):
+    for bulle in bulles:
+        if bulle[1] == 1 :
+            pos = bulle[0].pos
+            bulle[0].deplacer([pos[0]-1,(sin(pos[0]/20)*14)+bulle[2]])
+        if bulle[1] == 2 :
+            pos = bulle[0].pos
+            bulle[0].deplacer([pos[0]-1,(cos(pos[0]/12)*17)+bulle[2]])
+        if bulle[1] == 3 :
+            pos = bulle[0].pos
+            bulle[0].deplacer([pos[0]-1,(sin(pos[0]/20)*cos(pos[0]/15)*25)+bulle[2]])
+
 def draw():
     """
     """
     draw_ciel()
     draw_levels()
     draw_player()
+    draw_tirs_ennemis()
+    if laser_tir : 
+        charger_laser()
     draw_projectil()
     draw_ui()
 
@@ -298,6 +407,19 @@ def draw_contour(decor):
     screen.draw.filled_rect(rect_decor,couleur)
 
 
+def draw_tirs_ennemis():
+    for tir in tirs_ennemis:
+        pos = tir.pos
+        taille = tir.taille
+        rect_tir= Rect(pos,taille)
+        screen.draw.filled_rect(rect_tir,Couleurs.laser)
+    for tir in bulles:
+        tir = tir[0]
+        pos = tir.pos
+        taille = tir.taille
+        rect_tir= Rect(pos,taille)
+        screen.draw.filled_rect(rect_tir,Couleurs.laser)
+
 
 def slimy_tire():
     global liste_tirs
@@ -307,8 +429,13 @@ def slimy_tire():
     liste_tirs.append(entite.Projectil([x,y],((player.spd+1)*2.5)))
 
 def move_projectil():
+    """
+    Pour chaque tir, le déplace
+    """
     global liste_tirs
     for tir in liste_tirs:
+        tir.move()
+    for tir in tirs_ennemis:
         tir.move()
 
 def ajoute_decors(nv):
@@ -402,13 +529,18 @@ w = 0
 v = 0
 count_frame2 = 0
 count_frame = 0
-stage = 1
-monde = 1
+stage = 5
+monde = 3
+tirs_ennemis = []
+pos_laser = None
+laser_tir = False
+charge_laser = 0
 liste_tirs = []
 a_tire = False
 boss_kill = False
-
+bulles = []
+timer_zone_aglu = 1
+zone_aglu = 0
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 pgzrun.go()
-
