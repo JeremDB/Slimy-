@@ -102,38 +102,38 @@ def update():
             level.ajuste_niveaux(levels,levels[1].pos_x)
             stage += 1
 
-    #Déplace les projectiles
-    move_projectil()
-    projectil_touche(liste_tirs)
-    #Supprimes les tirs qui entrent en contact avec un décors
-    check_collisions_tirs_decor(liste_tirs)
+    if etat_game == "jeu":
+        #Déplace les projectiles
+        move_projectil()
+        projectil_touche(liste_tirs)
+        #Supprimes les tirs qui entrent en contact avec un décors
+        check_collisions_tirs_decor(liste_tirs)
 
+        ennemi_move(levels)
+        #Supprime les ennemis morts :
+        ennemi_mort(levels)
+        #Vérifie si un ennemis touche le joueur
+        ennemi_contact(levels,player)
 
-    ennemi_move(levels)
-    #Supprime les ennemis morts :
-    ennemi_mort(levels)
-    #Vérifie si un ennemis touche le joueur
-    ennemi_contact(levels,player)
-
-    #Permet au joueur de sauter et gère la gravité qui lui est appliqué
-    if player.etat == "saut":
-        gravite()
-    if check_collisions_down() == -1 : #Ne touche pas le sol
-        calc_speed()
-        gravite()
-    if check_collisions_top() == -1: #Ne touche pas le bas d'un décor
-        if check_collisions_down() == w: # si tu touche le haut d'un décor
-            player.pos[1] = w - hauteur_player
-            player.etat = "sol"
-            force_gravite = 2
-        
+        #Permet au joueur de sauter et gère la gravité qui lui est appliqué
+        if player.etat == "saut":
+            gravite()
+        if check_collisions_down() == -1 : #Ne touche pas le sol
+            calc_speed()
+            gravite()
+        if check_collisions_top() == -1: #Ne touche pas le bas d'un décor
+            if check_collisions_down() == w: # si tu touche le haut d'un décor
+                player.pos[1] = w - hauteur_player
+                player.etat = "sol"
+                force_gravite = 2
             
-    #Physique du joueur dans les airs
-    if check_collisions_top() == w and player.etat == "saut" : # Si tu touche le bas du décor
-        player.pos[1] = w
-        player.etat = "air"
-        force_gravite = -0.2
-        gravite()
+                
+        #Physique du joueur dans les airs
+        if check_collisions_top() == w and player.etat == "saut" : # Si tu touche le bas du décor
+            player.pos[1] = w
+            player.etat = "air"
+            force_gravite = -0.2
+            gravite()
 
 
     #Relance le défilement des niveaux après la mort du boss et augmente la vitesse du joueur
@@ -362,9 +362,14 @@ def draw():
             draw_player()
             draw_levels()
             draw_ui()
+    if etat_game == "pause" :
+        draw_pause()
 
 def draw_mort():
     screen.blit("mort",(0,0))
+
+def draw_pause():
+    screen.fill((0,0,0))
 
 def draw_ciel():
     """
@@ -519,32 +524,40 @@ def check_keys():
     if keyboard.ESCAPE:
         exit()
         
-    if keyboard.P :
+    if keyboard.M :
         boss_kill = True
     
-    if keyboard.SPACE:
-        if etat_game == "menu":
+    if keyboard.P :
+        etat_game = "pause"
+
+    if keyboard.SPACE:  
+        if etat_game == "menu" or etat_game == "pause":
             etat_game = "jeu"
-            count_frame = 0
-        else:
-            if count_frame > 10 and player.etat == "sol" and player.etat != "air":
-                force_gravite = -1
-                player.etat = "saut"
-                force_gravite -= 4.3
+
+    if etat_game == "jeu":
+        if keyboard.SPACE:  
+            if etat_game == "menu":
+                etat_game = "jeu"
                 count_frame = 0
-    if keyboard.D:
-        if check_collisions_droite() == -1:
-            player.pos[0] +=5
-        if check_collisions_gauche() == True:
-            player.pos[0] = v - largeur_player
-    if keyboard.Q:
-        if check_collisions_gauche() == -1:
-            player.pos[0] -=5
-        if check_collisions_gauche() == True:
-            if stage == 5:
-                player.pos[0] = v + largeur
             else:
-                player.pos[0] = v + largeur - player.spd
+                if count_frame > 10 and player.etat == "sol" and player.etat != "air":
+                    force_gravite = -1
+                    player.etat = "saut"
+                    force_gravite -= 4.3
+                    count_frame = 0
+        if keyboard.D:
+            if check_collisions_droite() == -1:
+                player.pos[0] +=5
+            if check_collisions_gauche() == True:
+                player.pos[0] = v - largeur_player
+        if keyboard.Q:
+            if check_collisions_gauche() == -1:
+                player.pos[0] -=5
+            if check_collisions_gauche() == True:
+                if stage == 5:
+                    player.pos[0] = v + largeur
+                else:
+                    player.pos[0] = v + largeur - player.spd
                 
     if keyboard.R:
         if etat_game == "mort":
