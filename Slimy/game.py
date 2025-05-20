@@ -89,6 +89,7 @@ def update():
     #Vérifie les inputs
     check_keys()
 
+    high_score()
 
     #Gère le défilement des niveaux et les colisions due au défilement
     if stage < 5 and etat_game == "jeu":
@@ -380,7 +381,8 @@ def bulles_touche(bulles):
 def ennemi_move(levels:list):
     for lvl in levels:
         for ennemi in lvl.ennemis:
-            ennemi.move()
+            if ennemi.pos[0] < 1920 :
+                ennemi.move()
 
 def ennemi_tir(levels:list):
     for lvl in levels :
@@ -419,10 +421,13 @@ def ennemi_mort(levels: list):
     """
     Si un ennemi est mort, le supprime de la liste des ennemis
     """
-    global boss_kill
+    global boss_kill, score
     for lvl in levels :
         for ennemi in lvl.ennemis:
             if ennemi.est_mort():
+                score += ennemi.points * (1 + monde / 5)
+                score //= 5
+                score *= 5
                 if isinstance(ennemi, level.Boss):
                     boss_kill = True 
                 lvl.ennemis.remove(ennemi)
@@ -570,6 +575,10 @@ def draw_ui():
         screen.draw.text((str(player.pv)),(180,200),fontname="minecraft", fontsize=60,color = Couleurs.noir)
         screen.draw.text(("Att :"), (25, 250),fontname="minecraft", fontsize=60, color = Couleurs.noir)
         screen.draw.text((str(player.atk)),(180,250),fontname="minecraft", fontsize=60,color = Couleurs.noir)
+        screen.draw.text(("Score :"), (25, 300),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text((str(score)), (250, 300),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text(("Highscore :"), (25, 350),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text((str(highscore)), (360, 350),fontname="minecraft", fontsize=60, color = Couleurs.noir)
     else:
         screen.draw.text(("Stage :"), (25, 100),fontname="minecraft", fontsize=60, color = Couleurs.noir)
         screen.draw.text((str(stage)), (250, 100),fontname="minecraft", fontsize=60, color = Couleurs.noir)
@@ -832,6 +841,24 @@ def init_game():
     stage = 1
     monde = 1
 
+def high_score():
+  global score, highscore
+  """
+  Détecte quand le highscore est dépassé et le modifie"
+  """
+  if score > float(highscore):
+    highscore = str(score)
+    modif = open("score.txt", "w")
+    modif.write(highscore)
+    modif.close()
+
+def init_highscore():
+  """
+  Initialise le highscore en ouvrant le doc correspondant
+  """
+  score = open("score.txt", "r")
+  return score.read()
+
 def check_keys():
     global count_frame,force_gravite,boss_kill,etat_game,player,stage,monde,levels, tirs_ennemis, bulles
     """
@@ -919,6 +946,8 @@ boss_kill = False
 bulles = []
 timer_zone_aglu = 1
 zone_aglu = 0
+score = 0
+highscore = init_highscore()
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 pgzrun.go()
