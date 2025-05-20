@@ -448,7 +448,6 @@ def tirer_bulle(boss):
             #randint(1,3)
             3
             ,pos[1]])
-        print("bulle")
         boss.peut_tirer = False
     else :
         boss.rise_couldown()
