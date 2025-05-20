@@ -124,6 +124,7 @@ def update():
         if monde % 3 == 2 and stage == 5 :
             tirer_bulle(levels[0].ennemis[0]) 
             move_bulles(bulles)
+            check_collisions_bulles_tirs()
         if monde % 3 == 0 and stage == 5:
             timer_zone_aglu += 1 
             print(timer_zone_aglu)
@@ -165,6 +166,7 @@ def update():
     if boss_kill: 
         stage = 1
         monde += 1
+        bulles = []
         if player.spd < SPD_MAX :
             player.spd += 1
             player.atk += 1
@@ -326,6 +328,19 @@ def check_collisions_tirs_ennemis_decor():
         tir = bulle[0]
         if (tir.pos[0]+ tir.taille[0]) <= 0: 
             bulles.remove(bulle)
+
+def check_collisions_bulles_tirs():
+    for tir in liste_tirs :
+        rect_tir = Rect(tir.pos,(taille_projectil,taille_projectil))
+        for bulle in bulles :
+            b = bulle[0]
+            rect_bulle = Rect(b.pos,b.taille)
+            if rect_tir.colliderect(rect_bulle) :
+                if tir in liste_tirs :
+                    liste_tirs.remove(tir)
+                if bulle in bulles :
+                    bulles.remove(bulle)
+
 
 def projectil_touche(liste_tirs: list):
     """
@@ -766,7 +781,7 @@ def check_keys():
 etat_game = "menu"
 
 levels = level.init_niveau()
-player = entite.Joueur([50,660],spd = 5)
+player = entite.Joueur([50,660],spd = 5,atk = 10)
 gravity = 2
 force_gravite = -1 
 largeur = 0
@@ -775,7 +790,7 @@ v = 0
 count_frame_inv = 0
 count_frame = 0
 stage = 1
-monde = 3
+monde = 2
 liste_tirs = []
 tirs_ennemis = []
 pos_laser = None
