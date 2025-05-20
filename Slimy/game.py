@@ -506,6 +506,8 @@ def draw():
             draw_ui()
     if etat_game == "pause" :
         draw_pause()
+        draw_ui_pause()
+        
 
 def draw_mort():
     screen.blit("mort",(0,0))
@@ -529,6 +531,17 @@ def draw_menu():
     Dessine le menu
     """
     screen.blit("menu",(0,0))
+
+def draw_ui_pause():
+    """
+    Dessine l'interface utilisateur 
+    """
+    screen.draw.text(("Stage :"), (25, 100), fontsize=60, color = Couleurs.noir)
+    screen.draw.text((str(stage)), (170, 100), fontsize=60, color = Couleurs.noir)
+    screen.draw.text(("Monde :"), (25, 150), fontsize=60, color = Couleurs.noir)
+    screen.draw.text((str(monde)), (200, 150), fontsize=60, color = Couleurs.noir)
+    screen.draw.text(("PV :"), (25, 200), fontsize=60, color = Couleurs.noir)
+    screen.draw.text((str(player.pv)),(120,200), fontsize=60,color = Couleurs.noir)
 
 def draw_ui():
     """
