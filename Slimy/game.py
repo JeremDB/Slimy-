@@ -71,7 +71,7 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame,levels,stage, boss_kill, monde, anim_ciel, count_frame_inv, etat_game, player,laser_tir,charge_laser
+    global force_gravite, w, count_frame,levels,stage, boss_kill, monde, anim_ciel, count_frame_inv, etat_game, player,laser_tir,charge_laser,tirs_ennemis
     """
     Update le jeu 60 fois par seconde :
     Défilement des niveaux, 
@@ -90,13 +90,13 @@ def update():
 
 
     #Gère le défilement des niveaux et les colisions due au défilement
-    if stage < 3 and etat_game == "jeu":
+    if stage < 5 and etat_game == "jeu":
         scrolling()
         if check_collisions_droite() == True :
             player.pos[0] = v - largeur_player
     #Gère la suppressions des niveaux entièrement défilée et la créations des suivants
     if levels[1].pos_x <= 0 :
-        if stage == 1 :
+        if stage == 3 :
             level.ajuste_niveaux_boss(levels,levels[1].pos_x,monde)
             stage += 1 
         else :
@@ -109,6 +109,7 @@ def update():
         projectil_touche(liste_tirs)
         #Supprimes les tirs qui entrent en contact avec un décors
         check_collisions_tirs_decor(liste_tirs)
+        check_tirs_ennemis_out(tirs_ennemis)
 
         ennemi_move(levels)
         ennemi_tir(levels)
@@ -123,6 +124,8 @@ def update():
         ennemi_mort(levels)
         #Vérifie si un ennemis touche le joueur
         ennemi_contact(levels,player)
+
+        projectil_touche_player(tirs_ennemis)
 
         #Permet au joueur de sauter et gère la gravité qui lui est appliqué
         if player.etat == "saut":
@@ -286,6 +289,15 @@ def check_collisions_tirs_decor(liste_tirs: list):
                         if tir in liste_tirs :
                             liste_tirs.remove(tir)
 
+def check_tirs_ennemis_out(tirs_ennemis: list):
+    """
+    Vérifie les colisions entre les tirs et les décors et supprime les tirs qui entrent en contact avec un décors
+    """
+    for tir in tirs_ennemis:
+        if tir.pos[0] >= 1920  or (tir.pos[0] + tir.taille[0]) <= 0:
+            tirs_ennemis.remove(tir)
+
+
 def projectil_touche(liste_tirs: list):
     """
     Vérifie les collisions entre les tirs et les ennemis
@@ -294,11 +306,23 @@ def projectil_touche(liste_tirs: list):
     for lvl in levels :
         for ennemi in lvl.ennemis:
             for tir in liste_tirs:
-                rect_tir = Rect(tir.pos,(taille_projectil,taille_projectil))
+                rect_tir = Rect(tir.pos,tir.taille)
                 rect_ennemi = Rect(ennemi.pos,ennemi.taille)
                 if rect_tir.colliderect(rect_ennemi):
                     ennemi.prend_dgt(tir.atk)
                     liste_tirs.remove(tir)
+
+def projectil_touche_player(tirs_ennemis: list):
+    """
+    Vérifei les collisions entre les tirs ennemis et le joueur
+    """
+    for tir in tirs_ennemis:
+        rect_tir = Rect(tir.pos,tir.taille)
+        rect_joueur = Rect(player.pos,(largeur_player,hauteur_player))
+        if rect_tir.colliderect(rect_joueur) and not player.invincible:
+            player.prend_dgt(tir.atk)
+            player.invincible = True
+
 
 def ennemi_move(levels:list):
     for lvl in levels:
@@ -307,7 +331,7 @@ def ennemi_move(levels:list):
 
 def ennemi_tir(levels:list):
     for lvl in levels :
-        if lvl.boss and lvl.ennemis != [] and stage > 3:
+        if lvl.boss and lvl.ennemis != [] and stage == 5:
             boss_tir(lvl.ennemis[0])
 
 def boss_tir(boss):
@@ -315,19 +339,19 @@ def boss_tir(boss):
     if boss.peut_tirer :
         if boss.name == 'Roi_Gluant' :
             laser_tir = True
-            pos_laser = randint(1,3)
+            pos_laser = choice((250,370,490,610))
             boss.peut_tirer = False
     else : 
         boss.rise_couldown()
 
 def charger_laser():
-    pos = (1600,pos_laser*200)
+    pos = (1500,pos_laser)
     screen.draw.filled_circle(pos,50,Couleurs.laser)
 
 def tirer_laser():
     global tirs_ennemis
-    pos = [1600,(pos_laser*200)-20]
-    tirs_ennemis.append(entite.Projectil(pos,( 20),[-1,0],10,taille = (100,40)))
+    pos = [1500,(pos_laser)-20]
+    tirs_ennemis.append(entite.Projectil(pos,( 20),[-1,0],80,taille = (700,80)))
 
 def ennemi_mort(levels: list):
     """
@@ -545,7 +569,7 @@ def slimy_tire(pos):
     y += hauteur_player//2 -taille_projectil// 2
     direction = [pos[0] - x, pos[1] - y]
     direction = normalise_direction(direction)
-    liste_tirs.append(entite.Projectil([x,y],(player.atk*5),direction,(player.spd+6)))
+    liste_tirs.append(entite.Projectil([x,y],(player.atk*5),direction,(player.spd+6),taille = (taille_projectil,taille_projectil)))
 
 def normalise_direction(direction: list):
     """
@@ -563,6 +587,8 @@ def move_projectil():
     """
     global liste_tirs
     for tir in liste_tirs:
+        tir.move()
+    for tir in tirs_ennemis:
         tir.move()
     
 def on_mouse_down(button,pos):
@@ -582,7 +608,7 @@ def init_game():
     monde = 1
 
 def check_keys():
-    global count_frame,force_gravite,boss_kill,etat_game,player,stage,monde,levels
+    global count_frame,force_gravite,boss_kill,etat_game,player,stage,monde,levels, tirs_ennemis
     """
     Verifie les touches enfoncée 
     Echap pour quitter le jeu
@@ -640,6 +666,7 @@ def check_keys():
             stage = 1
             monde = 1
             etat_game = "jeu"
+            tirs_ennemis = []
         
 # Globals
 
