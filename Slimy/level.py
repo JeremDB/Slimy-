@@ -57,6 +57,8 @@ class Boss:
 		self.atk_dist = atk_dist
 		self.atk_cac = atk_cac
 		self.taille = forme 
+		self.peut_tirer = True
+		self.couldown = 0
 		self.pos = pos
 		self.loot = loot
 		self.vitesse = vitesse
@@ -72,6 +74,13 @@ class Boss:
 
 	def est_mort(self) -> bool :
 		return self.pv <= 0
+
+	def rise_couldown(self):
+		if not self.peut_tirer: 	
+			self.couldown += 1 
+		if self.couldown > 120 :
+			self.couldown = 0
+			self.peut_tirer = True
 
 	def move(self) :
 		if self.vitesse != None :
@@ -107,6 +116,9 @@ class Decors:
 		Renvoie la hauteur du décor
 		"""
 		return self.__hauteur
+
+	def get_forme(self):
+		return self.__forme
 
 	def couleur(self):
 		"""
@@ -167,7 +179,7 @@ class Levels:
 """
 Décors de tailles : 
 (400,240,160,80)*1000,
-(240,160,80)*
+(240,160,80)*20
 """
 
 #Premier niveau
@@ -190,6 +202,7 @@ niveau1 = Levels(
 	
 #Liste des niveaux boss
 niveaux_boss = [
+#Roi_Gluant
 Levels(
 	[Decors(-80, 700, 160, 400, 'decor','bloc'),
 	Decors(620, 560, 240, 20, 'decor','plat'),
@@ -206,6 +219,36 @@ Levels(
 	Decors(1680, 780, 160, 1000, 'decor','bloc'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')]
 	,[Boss([1680,400],(80,430),"Roi_Gluant", pv= 250, atk_cac =15 )],
+	boss = True
+	),
+#Gluant_Bulle
+Levels(
+	[Decors(-80, 700, 160, 1000, 'decor','bloc'),
+	Decors(80,700,240,1000,'decor','bloc'),
+	Decors(320,660,400,1000,'decor','bloc'),
+	Decors(720,700,400,1000,'decor','bloc'),
+	Decors(1120,700,400,1000,'decor','bloc'),
+	Decors(1520,700,320,1000,'decor','bloc'),
+	Decors(620,540,240,20,'decor','plat'),
+	Decors(860,540,240,20,'decor','plat'),
+	Decors(1100,540,240,20,'decor','plat'),
+	Decors(820,420,160,20,'decor','plat'),
+	Decors(980,420,160,20,'decor','plat'),
+	Decors(1840, 700, 160, 1000, 'decor','bloc')],
+	[Boss([1680,600],(80,230),"Roi_Gluant", pv= 250, atk_cac =15 )],
+	boss = True
+	),
+#Agluantin
+Levels(
+	[Decors(-80, 700, 160, 1000, 'decor','bloc'),
+	Decors(80,700,240,1000,'decor','bloc'),
+	Decors(320,660,240,1000,'decor','bloc'),
+	Decors(1520,700,320,1000,'decor','bloc'),
+	Decors(540,540,240,20,'decor','plat'),
+	Decors(860,420,240,20,'decor','plat'),
+	Decors(1180,300,240,20,'decor','plat'),
+	Decors(1840, 700, 160, 1000, 'decor','bloc')],
+	[Boss([1680,120],(80,1000),"Roi_Gluant", pv= 250, atk_cac =15 )],
 	boss = True
 	)
 ]
@@ -265,6 +308,7 @@ Levels([
 	Decors(1840, 700, 160, 1000, 'decor','bloc')],
 	[]
 	),
+#Niveau 4 
 Levels([
 	Decors(-80,700,160,1000,'decor','bloc'),
 	Decors(80,700,160,1000,'decor','bloc'),
@@ -280,6 +324,7 @@ Levels([
 	[Ennemi.creer_rond([340,600]),
 	Ennemi.creer_ovale_haut([1090,330])]
 	),
+#Niveau 5
 Levels([
 	Decors(-80,700,160,1000,'decor','bloc'),
 	Decors(80,720,160,1000,'decor','bloc'),
@@ -320,11 +365,11 @@ def ajuste_niveaux(levels,pos):
 	levels.pop(0)
 	return levels
 
-def ajuste_niveaux_boss(levels,pos):
+def ajuste_niveaux_boss(levels,pos,monde):
 	"""
 	Ajoute un niveau boss a la liste des niveaux et retire le précédent niveau
 	"""
-	nouveau = deepcopy(niveaux_boss[randint(0,len(niveaux_boss)-1)])
+	nouveau = deepcopy(niveaux_boss[(monde+2)%3])
 	nouveau.decalage(pos)
 	levels.append(nouveau)
 	levels.pop(0)
@@ -333,9 +378,8 @@ def ajuste_niveaux_boss(levels,pos):
 
 
 nouveau_lvl = [
-niveaux_boss[0], niveaux[4]
+niveaux_boss[2]
 ]
-# nouveau_lvl[1].decalage(0)
 
 
 decors_de_base = [Decors(-80,700,80,1000,"decor",'bloc'),Decors(1840,700,160,1000,"decor",'bloc')]
