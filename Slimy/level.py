@@ -6,7 +6,7 @@ class Ennemi:
 	Class des ennemis,
 	Propose de les faire défiler
 	"""
-	def __init__(self, pos: list, taille: tuple, forme: str, pv: int = None, atk_dist: int = None, atk_cac:int  = None,vitesse: list = None):
+	def __init__(self, pos: list, taille: tuple, forme: str, pv: int = None, atk_dist: int = None, atk_cac:int  = None,vitesse: list = None, points = None):
 		self.pv = pv
 		self.atk_dist = atk_dist
 		self.atk_cac = atk_cac
@@ -14,6 +14,7 @@ class Ennemi:
 		self.pos = pos
 		self.type= forme
 		self.vitesse= vitesse 
+		self.points = points
 
 	def scroll(self, n: int):
 		"""
@@ -34,15 +35,15 @@ class Ennemi:
 
 	@classmethod
 	def creer_rond(cls,pos):
-		return cls(pos,(40,40),"rond",pv = 20,atk_cac = 1)
+		return cls(pos,(40,40),"rond",pv = 20,atk_cac = 1, points = 15)
 
 	@classmethod
 	def creer_ovale_haut(cls,pos):
-		return cls(pos,(40,90),"ovale_haut",pv = 50, atk_cac = 5)
+		return cls(pos,(40,90),"ovale_haut",pv = 50, atk_cac = 5, points = 35)
 	
 	@classmethod
 	def creer_carapace(cls,pos):
-		return cls(pos,(60,30),"carapace",pv = 15, atk_cac = 1, vitesse = [-1,0])
+		return cls(pos,(60,30),"carapace",pv = 15, atk_cac = 1, vitesse = [-1,0], points = 25)
 
 
 
@@ -51,7 +52,7 @@ class Boss:
 	Class des boss
 	Propose de les faire défiler
 	"""
-	def __init__(self, pos: int, forme: tuple, name: str, loot: str = None, pv: int = None, atk_dist: int = None, atk_cac: int = None,vitesse: list = None, couldown = None):
+	def __init__(self, pos: int, forme: tuple, name: str, loot: str = None, pv: int = None, atk_dist: int = None, atk_cac: int = None,vitesse: list = None, couldown = None, points = None):
 		self.name = name
 		self.pv = pv
 		self.atk_dist = atk_dist
@@ -63,6 +64,7 @@ class Boss:
 		self.pos = pos
 		self.loot = loot
 		self.vitesse = vitesse
+		self.points = points
 
 	def scroll(self, n: int):
 		"""
@@ -218,7 +220,7 @@ Levels(
 	Decors(1520, 780, 160, 1000, 'decor','bloc'),	
 	Decors(1680, 780, 160, 1000, 'decor','bloc'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')]
-	,[Boss([1680,400],(80,430),"Roi_Gluant", pv= 250, atk_cac =15, couldown = 75 )],
+	,[Boss([1680,400],(80,430),"Roi_Gluant", pv= 250, atk_cac =15, couldown = 75, points = 250 )],
 	boss = True
 	),
 #Gluant_Bulle
@@ -236,7 +238,7 @@ Levels(
 	Decors(820,420,160,20,'decor','plat'),
 	Decors(980,420,160,20,'decor','plat'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')],
-	[Boss([1680,570],(80,230),"Gluant_Bulle", pv= 250, atk_cac =15,couldown = 90)],
+	[Boss([1680,570],(80,230),"Gluant_Bulle", pv= 250, atk_cac =15,couldown = 90, points = 350)],
 	boss = True
 	),
 #Agluantin
@@ -250,7 +252,7 @@ Levels(
 	Decors(860,420,240,20,'decor','plat'),
 	Decors(1180,300,240,20,'decor','plat'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')],
-	[Boss([1680,120],(80,1000),"Agluantin", pv= 250, atk_cac =15,couldown = 15)],
+	[Boss([1680,120],(80,1000),"Agluantin", pv= 250, atk_cac =15,couldown = 15, points = 400)],
 	boss = True
 	)
 ]
