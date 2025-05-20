@@ -388,6 +388,9 @@ def ennemi_tir(levels:list):
             boss_tir(lvl.ennemis[0])
 
 def boss_tir(boss):
+    """
+    Fait tirer le premier boss 
+    """
     global laser_tir,pos_laser
     if boss.peut_tirer :
         if boss.name == 'Roi_Gluant' :
@@ -398,10 +401,16 @@ def boss_tir(boss):
         boss.rise_couldown()
 
 def charger_laser():
+    """
+    Permet au premier boss d'indiquer quand est ce qu'il va tirer 
+    """
     pos = (1500,pos_laser)
     screen.draw.filled_circle(pos,50,Couleurs.laser)
 
 def tirer_laser():
+    """
+    Permet au premier de tirer 
+    """
     global tirs_ennemis
     pos = [1500,(pos_laser)-40]
     tirs_ennemis.append(entite.Projectil(pos,( 20),[-1,0],80,taille = (700,80)))
@@ -432,6 +441,9 @@ def ennemi_contact(levels: list,player):
                     player.prend_dgt(ennemi.atk_cac)
 
 def aglu_tire(boss):
+    """
+    Permet au 3ème boss de tirer 
+    """
     if boss.peut_tirer :
         x = 1660
         y = ZONES_AGLU[zone_aglu]
@@ -442,6 +454,9 @@ def aglu_tire(boss):
         boss.rise_couldown()
 
 def tirer_bulle(boss):
+    """
+    Permet au 2ème boss de tirer ses bulles 
+    """
     if boss.peut_tirer :
         pos = choice(([1600,600],[1630,470],[1690,350]))
         bulles.append([entite.Projectil(pos,15,None,taille=(42,42)),
@@ -453,6 +468,9 @@ def tirer_bulle(boss):
         boss.rise_couldown()
 
 def move_bulles(bulles):
+    """
+    Permet au bulle du 2ème boss de bouger en suivant une courbe précise 
+    """
     for bulle in bulles:
         if bulle[1] == 1 :
             pos = bulle[0].pos
@@ -506,13 +524,19 @@ def draw():
             draw_ui()
     if etat_game == "pause" :
         draw_pause()
-        draw_ui_pause()
+        draw_ui()
         
 
 def draw_mort():
+    """
+    Dessine l'écran de mort 
+    """
     screen.blit("mort",(0,0))
 
 def draw_pause():
+    """
+    Dessine l'écran de pause 
+    """
     screen.blit("pause",(0,0))
 
 def draw_ciel():
@@ -532,27 +556,27 @@ def draw_menu():
     """
     screen.blit("menu",(0,0))
 
-def draw_ui_pause():
-    """
-    Dessine l'interface utilisateur 
-    """
-    screen.draw.text(("Stage :"), (25, 100), fontsize=60, color = Couleurs.noir)
-    screen.draw.text((str(stage)), (170, 100), fontsize=60, color = Couleurs.noir)
-    screen.draw.text(("Monde :"), (25, 150), fontsize=60, color = Couleurs.noir)
-    screen.draw.text((str(monde)), (200, 150), fontsize=60, color = Couleurs.noir)
-    screen.draw.text(("PV :"), (25, 200), fontsize=60, color = Couleurs.noir)
-    screen.draw.text((str(player.pv)),(120,200), fontsize=60,color = Couleurs.noir)
 
 def draw_ui():
     """
     Dessine l'interface utilisateur 
     """
-    screen.draw.text(("Stage :"), (25, 100),fontname="minecraft", fontsize=60, color = Couleurs.noir)
-    screen.draw.text((str(stage)), (250, 100),fontname="minecraft", fontsize=60, color = Couleurs.noir)
-    screen.draw.text(("Monde :"), (25, 150),fontname="minecraft", fontsize=60, color = Couleurs.noir)
-    screen.draw.text((str(monde)), (250, 150),fontname="minecraft", fontsize=60, color = Couleurs.noir)
-    screen.draw.text(("PV :"), (1550, 150),fontname="minecraft", fontsize=60, color = Couleurs.noir)
-    screen.draw.text((str(player.pv)),(1700,150),fontname="minecraft", fontsize=60,color = Couleurs.noir)
+    if etat_game == 'pause':
+        screen.draw.text(("Stage :"), (25, 100),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text((str(stage)), (250, 100),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text(("Monde :"), (25, 150),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text((str(monde)), (250, 150),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text(("PV :"), (25, 200),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text((str(player.pv)),(180,200),fontname="minecraft", fontsize=60,color = Couleurs.noir)
+        screen.draw.text(("Att :"), (25, 250),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text((str(player.atk)),(180,250),fontname="minecraft", fontsize=60,color = Couleurs.noir)
+    else:
+        screen.draw.text(("Stage :"), (25, 100),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text((str(stage)), (250, 100),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text(("Monde :"), (25, 150),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text((str(monde)), (250, 150),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text(("PV :"), (1550, 150),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text((str(player.pv)),(1700,150),fontname="minecraft", fontsize=60,color = Couleurs.noir)
 
 def draw_player():
     """
