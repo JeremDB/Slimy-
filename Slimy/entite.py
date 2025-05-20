@@ -21,11 +21,12 @@ class Joueur:
 
 class Projectil:
 
-	def __init__(self, pos,atk,direction,spd = 1):
+	def __init__(self, pos,atk,direction,spd = 1,taille: tuple = None ):
 		self.pos = pos
 		self.atk = atk
 		self.direction = direction
 		self.spd = spd 
+		self.taille = taille
 
 	def move(self):
 		self.pos[0] += self.spd*self.direction[0]
