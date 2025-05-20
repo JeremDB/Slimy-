@@ -22,6 +22,7 @@ class Couleurs():
     Contient les constantes des couleurs utilisés
     """
     fond = (150,207,255)
+    laser = (200,120,210)
     terre = (150,90,20)
     jungle = (100,120,20)
     terre_brule = (110,50,10)
@@ -70,7 +71,7 @@ class Couleurs():
         return (randint(0,255),randint(0,255),randint(0,255))
 
 def update():
-    global force_gravite, w, count_frame,levels,stage, boss_kill, monde, anim_ciel, count_frame_inv, etat_game, player
+    global force_gravite, w, count_frame,levels,stage, boss_kill, monde, anim_ciel, count_frame_inv, etat_game, player,laser_tir,charge_laser
     """
     Update le jeu 60 fois par seconde :
     Défilement des niveaux, 
@@ -89,14 +90,14 @@ def update():
 
 
     #Gère le défilement des niveaux et les colisions due au défilement
-    if stage < 5 and etat_game == "jeu":
+    if stage < 3 and etat_game == "jeu":
         scrolling()
         if check_collisions_droite() == True :
             player.pos[0] = v - largeur_player
     #Gère la suppressions des niveaux entièrement défilée et la créations des suivants
     if levels[1].pos_x <= 0 :
-        if stage == 3 :
-            level.ajuste_niveaux_boss(levels,levels[1].pos_x)
+        if stage == 1 :
+            level.ajuste_niveaux_boss(levels,levels[1].pos_x,monde)
             stage += 1 
         else :
             level.ajuste_niveaux(levels,levels[1].pos_x)
@@ -110,6 +111,14 @@ def update():
         check_collisions_tirs_decor(liste_tirs)
 
         ennemi_move(levels)
+        ennemi_tir(levels)
+        if laser_tir : 
+            charge_laser += 1
+            
+            if charge_laser >= 15 :
+                tirer_laser()
+                charge_laser = 0
+                laser_tir = False
         #Supprime les ennemis morts :
         ennemi_mort(levels)
         #Vérifie si un ennemis touche le joueur
@@ -296,6 +305,30 @@ def ennemi_move(levels:list):
         for ennemi in lvl.ennemis:
             ennemi.move()
 
+def ennemi_tir(levels:list):
+    for lvl in levels :
+        if lvl.boss and lvl.ennemis != [] and stage > 3:
+            boss_tir(lvl.ennemis[0])
+
+def boss_tir(boss):
+    global laser_tir,pos_laser
+    if boss.peut_tirer :
+        if boss.name == 'Roi_Gluant' :
+            laser_tir = True
+            pos_laser = randint(1,3)
+            boss.peut_tirer = False
+    else : 
+        boss.rise_couldown()
+
+def charger_laser():
+    pos = (1600,pos_laser*200)
+    screen.draw.filled_circle(pos,50,Couleurs.laser)
+
+def tirer_laser():
+    global tirs_ennemis
+    pos = [1600,(pos_laser*200)-20]
+    tirs_ennemis.append(entite.Projectil(pos,( 20),[-1,0],10,taille = (100,40)))
+
 def ennemi_mort(levels: list):
     """
     Si un ennemi est mort, le supprime de la liste des ennemis
@@ -307,8 +340,6 @@ def ennemi_mort(levels: list):
                 if isinstance(ennemi, level.Boss):
                     boss_kill = True 
                 lvl.ennemis.remove(ennemi)
-
-
 
 def ennemi_contact(levels: list,player):
     """
@@ -322,7 +353,6 @@ def ennemi_contact(levels: list,player):
                 if not player.invincible :
                     player.invincible = True
                     player.prend_dgt(ennemi.atk_cac)
-
 
 def gravite():
     """
@@ -358,6 +388,9 @@ def draw():
         else:
             draw_ciel()
             draw_projectil()
+            draw_tirs_ennemis()
+            if laser_tir : 
+                charger_laser()
             draw_player()
             draw_levels()
             draw_ui()
@@ -416,6 +449,13 @@ def draw_projectil():
         p = Actor("projectil", topleft=(x,y))
         p.draw()
 
+def draw_tirs_ennemis():
+    for tir in tirs_ennemis:
+        pos = tir.pos
+        taille = tir.taille
+        rect_tir= Rect(pos,taille)
+        screen.draw.filled_rect(rect_tir,Couleurs.laser)
+
 def draw_levels():
     """
     Pour chaque niveau, dessine l'ensemble de ses décors et de ses ennemis
@@ -444,7 +484,6 @@ def draw_boss(boss : list):
     """
     Dessine les boss
     """
-    print('dessine_boss')
     if boss.name == 'Roi_Gluant':
         x = boss.pos[0] -320
         y = boss.pos[1] 
@@ -452,9 +491,6 @@ def draw_boss(boss : list):
         b.draw()
 
 def draw_decor(decor):
-    """
-    Dessine le contour du décor puis le décors en lui même 
-    """
     draw_contour(decor)
     x , y = decor.get_pos()
     x += 5
@@ -467,15 +503,37 @@ def draw_decor(decor):
     screen.draw.filled_rect(rect_decor,couleur)
 
 def draw_contour(decor):
-    """
-    Dessine le contour du décor
-    """
     topleft = decor.get_pos()
     largeur = decor.get_largeur()
     hauteur = decor.get_hauteur()
     couleur = Couleurs.color_contour(decor.couleur())
     rect_decor = Rect(topleft,(largeur,hauteur))
     screen.draw.filled_rect(rect_decor,couleur)
+
+'''
+def draw_decor(decor):
+    """
+    Dessine les decors
+    """
+    if decor.get_forme() == 'bloc' :
+        draw_bloc(decor)
+    if decor.get_forme() == 'plat':
+        draw_plat(decor)
+
+def draw_bloc(decor):
+    """
+    Dessine les decors de type bloc
+    """
+    x, y = decor.get_pos()
+    if decor.get_largeur() == 400 :
+        d = Actor('sol_400',topleft = (x,y))
+        d.draw()
+
+def draw_plat(decor): 
+    """
+    Dessine les decors de type plat
+    """
+'''
 
 def slimy_tire(pos):
     """
@@ -599,6 +657,10 @@ count_frame = 0
 stage = 1
 monde = 1
 liste_tirs = []
+tirs_ennemis = []
+pos_laser = None
+laser_tir = False
+charge_laser = 0
 a_tire = False
 boss_kill = False
 
