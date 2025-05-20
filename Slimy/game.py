@@ -899,7 +899,7 @@ def check_keys():
 etat_game = "menu"
 
 levels = level.init_niveau()
-player = entite.Joueur([50,660],spd = 5,atk = 2)
+player = entite.Joueur([50,660],spd = 3,atk = 2)
 gravity = 2
 force_gravite = -1 
 largeur = 0
