@@ -511,7 +511,7 @@ def draw_mort():
     screen.blit("mort",(0,0))
 
 def draw_pause():
-    screen.fill((0,0,0))
+    screen.blit("pause",(0,0))
 
 def draw_ciel():
     """
