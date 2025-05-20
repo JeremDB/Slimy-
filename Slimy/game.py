@@ -127,9 +127,7 @@ def update():
             check_collisions_bulles_tirs()
         if monde % 3 == 0 and stage == 5:
             timer_zone_aglu += 1 
-            print(timer_zone_aglu)
             if timer_zone_aglu > 240 :
-                print("changement_zone")
                 zone_aglu = randint(0,3)
                 timer_zone_aglu = 0
             aglu_tire(levels[0].ennemis[0])
@@ -366,6 +364,8 @@ def projectil_touche_player(tirs_ennemis: list):
         if rect_tir.colliderect(rect_joueur) and not player.invincible:
             player.prend_dgt(tir.atk)
             player.invincible = True
+            if monde %3 == 0 :
+                tirs_ennemis.remove(tir)
 
 def bulles_touche(bulles):
     for bulle in bulles:
@@ -566,12 +566,13 @@ def draw_tirs_ennemis():
         rect_tir= Rect(pos,taille)
         screen.draw.filled_rect(rect_tir,Couleurs.laser)    
     for tir in bulles:
-        tir = tir[0]
-        pos = tir.pos
-        taille = tir.taille
-        rect_tir= Rect(pos,taille)
-        screen.draw.filled_rect(rect_tir,Couleurs.laser)
+        draw_bulle(tir[0])
 
+def draw_bulle(bulle):
+    x = bulle.pos[0] -12
+    y = bulle.pos[1] -12
+    b = Actor('bulle',(x,y))
+    b.draw()
 
 def draw_levels():
     """
@@ -591,11 +592,21 @@ def draw_ennemi(ennemi):
     """
     Dessine l'ennemi
     """
-    topleft = ennemi.pos
-    taille= ennemi.taille
-    couleur = (150,10,150)
-    rect_ennemi = Rect(topleft,taille)
-    screen.draw.filled_rect(rect_ennemi,couleur)
+    if ennemi.taille[1] == 40 :
+        x = ennemi.pos[0]
+        y = ennemi.pos[1] + 5
+        e = Actor('ennemi1',topleft = (x,y)) 
+        e.draw()
+    if ennemi.taille[1] == 30 :
+        x = ennemi.pos[0]
+        y = ennemi.pos[1]-5
+        e = Actor('ennemi2',topleft = (x,y)) 
+        e.draw()
+    if ennemi.taille[1] == 90 :
+        x = ennemi.pos[0]
+        y = ennemi.pos[1] + 5
+        e = Actor('ennemi3',topleft = (x,y)) 
+        e.draw()
 
 def draw_boss(boss : list):
     """
@@ -606,7 +617,17 @@ def draw_boss(boss : list):
         y = boss.pos[1] 
         b = Actor('roi_gluant', topleft = (x,y))
         b.draw()
-
+    if boss.name == "Gluant_Bulle" :
+        x = boss.pos[0] -320
+        y = boss.pos[1] -30
+        b = Actor('gluantbulle', topleft = (x,y))
+        b.draw()
+    if boss.name == "Agluantin" :
+        x = boss.pos[0] -9
+        y = boss.pos[1] 
+        b = Actor('aggluantin', topleft = (x,y))
+        b.draw()
+'''
 def draw_decor(decor):
     draw_contour(decor)
     x , y = decor.get_pos()
@@ -626,8 +647,8 @@ def draw_contour(decor):
     couleur = Couleurs.color_contour(decor.couleur())
     rect_decor = Rect(topleft,(largeur,hauteur))
     screen.draw.filled_rect(rect_decor,couleur)
-
 '''
+
 def draw_decor(decor):
     """
     Dessine les decors
@@ -643,27 +664,87 @@ def draw_bloc(decor):
     """
     x, y = decor.get_pos()
     if decor.get_largeur() == 400 :
-        d = Actor('sol_400',topleft = (x,y))
-        d.draw()
+        if monde % 3 == 1 :
+            d = Actor('sol_400',topleft = (x,y))
+            d.draw()
+        if monde % 3 == 2 :
+            d = Actor('sol_400_jungle',topleft = (x,y))
+            d.draw()
+        if monde % 3 == 0 :
+            d = Actor('sol_400_volcan',topleft = (x,y))
+            d.draw()
 
     if decor.get_largeur() == 240 :
-        d = Actor('sol_240',topleft = (x,y))
-        d.draw()
+        if monde % 3 == 1 :
+            d = Actor('sol_240',topleft = (x,y))
+            d.draw()
+        if monde % 3 == 2 :
+            d = Actor('sol_240_jungle',topleft = (x,y))
+            d.draw()
+        if monde % 3 == 0 :
+            d = Actor('sol_240_volcan',topleft = (x,y))
+            d.draw()
 
     if decor.get_largeur() == 160 :
-        d = Actor('sol_160',topleft = (x,y))
-        d.draw()
+        if monde % 3 == 1 :
+            d = Actor('sol_160',topleft = (x,y))
+            d.draw()
+        if monde % 3 == 2 :
+            d = Actor('sol_160_jungle',topleft = (x,y))
+            d.draw()
+        if monde % 3 == 0 :
+            d = Actor('sol_160_volcan',topleft = (x,y))
+            d.draw()
 
     if decor.get_largeur() == 80 :
-        d = Actor('sol_80',topleft = (x,y))
-        d.draw()
+        if monde % 3 == 1 :
+            d = Actor('sol_80',topleft = (x,y))
+            d.draw()
+        if monde % 3 == 2 :
+            d = Actor('sol_80_jungle',topleft = (x,y))
+            d.draw()
+        if monde % 3 == 0 :
+            d = Actor('sol_80_volcan',topleft = (x,y))
+            d.draw()
 
 
 def draw_plat(decor): 
     """
     Dessine les decors de type plat
     """
-'''
+    x, y = decor.get_pos()
+    if decor.get_largeur() == 240 :
+        if monde % 3 == 1 :
+            d = Actor('plateforme_240',topleft = (x,y))
+            d.draw()
+        if monde % 3 == 2 :
+            d = Actor('plateforme_240_jungle',topleft = (x,y))
+            d.draw()
+        if monde % 3 == 0 :
+            d = Actor('plateforme_240_volcan',topleft = (x,y))
+            d.draw()
+
+    if decor.get_largeur() == 160 :
+        if monde % 3 == 1 :
+            d = Actor('plateforme_160',topleft = (x,y))
+            d.draw()
+        if monde % 3 == 2 :
+            d = Actor('plateforme_160_jungle',topleft = (x,y))
+            d.draw()
+        if monde % 3 == 0:
+            d = Actor('plateforme_160_volcan',topleft = (x,y))
+            d.draw()
+
+    if decor.get_largeur() == 80 :
+        if monde % 3 == 1 :
+            d = Actor('plateforme_80',topleft = (x,y))
+            d.draw()
+        if monde % 3 == 2 :
+            d = Actor('plateforme_80_jungle',topleft = (x,y))
+            d.draw()
+        if monde % 3 == 0 :
+            d = Actor('plateforme_80_volcan',topleft = (x,y))
+            d.draw()
 
 def slimy_tire(pos):
     """
@@ -675,7 +756,7 @@ def slimy_tire(pos):
     y += hauteur_player//2 -taille_projectil// 2
     direction = [pos[0] - x, pos[1] - y]
     direction = normalise_direction(direction)
-    liste_tirs.append(entite.Projectil([x,y],(player.atk*5),direction,(player.spd+6),taille = (taille_projectil,taille_projectil)))
+    liste_tirs.append(entite.Projectil([x,y],(player.atk*3),direction,(player.spd+6),taille = (taille_projectil,taille_projectil)))
 
 def normalise_direction(direction: list):
     """
@@ -780,7 +861,7 @@ def check_keys():
 etat_game = "menu"
 
 levels = level.init_niveau()
-player = entite.Joueur([50,660],spd = 5,atk = 10)
+player = entite.Joueur([50,660],spd = 5,atk = 2)
 gravity = 2
 force_gravite = -1 
 largeur = 0
@@ -789,7 +870,7 @@ v = 0
 count_frame_inv = 0
 count_frame = 0
 stage = 1
-monde = 2
+monde = 1
 liste_tirs = []
 tirs_ennemis = []
 pos_laser = None
