@@ -257,8 +257,6 @@ def sort():
     if player.pos[1] > 1080 :
         player.pv = 0
 
-
-
 def check_collisions_tirs_decor(liste_tirs: list):
     """
     Vérifie les colisions entre les tirs et les décors et supprime les tirs qui entrent en contact avec un décors
@@ -298,7 +296,6 @@ def ennemi_move(levels:list):
         for ennemi in lvl.ennemis:
             ennemi.move()
 
-
 def ennemi_mort(levels: list):
     """
     Si un ennemi est mort, le supprime de la liste des ennemis
@@ -310,6 +307,8 @@ def ennemi_mort(levels: list):
                 if isinstance(ennemi, level.Boss):
                     boss_kill = True 
                 lvl.ennemis.remove(ennemi)
+
+
 
 def ennemi_contact(levels: list,player):
     """
@@ -424,8 +423,11 @@ def draw_levels():
     for lvl in levels :
         for decor in lvl.get_decors():
             draw_decor(decor)
-        for ennemi in lvl.ennemis :
-            draw_ennemi(ennemi)
+        if lvl.boss == True :
+            draw_boss(lvl.ennemis[0])
+        else :
+            for ennemi in lvl.ennemis :
+                draw_ennemi(ennemi)
 
 def draw_ennemi(ennemi):
     """
@@ -436,6 +438,16 @@ def draw_ennemi(ennemi):
     couleur = (150,10,150)
     rect_ennemi = Rect(topleft,taille)
     screen.draw.filled_rect(rect_ennemi,couleur)
+
+def draw_boss(boss : "Boss"):
+    """
+    Dessine les boss
+    """
+    print('dessine_boss')
+    if boss.name == 'Roi_Gluant':
+        pos = boss.pos
+        b = Actor('roi_gluant', topleft = pos)
+        b.draw()
 
 def draw_decor(decor):
     """
