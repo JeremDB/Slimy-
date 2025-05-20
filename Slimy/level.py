@@ -235,7 +235,7 @@ Levels(
 	Decors(820,420,160,20,'decor','plat'),
 	Decors(980,420,160,20,'decor','plat'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')],
-	[Boss([1680,600],(80,230),"Gluant_Bulle", pv= 250, atk_cac =15,couldown = 180)],
+	[Boss([1680,600],(80,230),"Gluant_Bulle", pv= 250, atk_cac =15,couldown = 90)],
 	boss = True
 	),
 #Agluantin
@@ -378,7 +378,7 @@ def ajuste_niveaux_boss(levels,pos,monde):
 
 
 nouveau_lvl = [
-niveaux_boss[2]
+niveaux_boss[1]
 ]
 
 
