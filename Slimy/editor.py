@@ -370,11 +370,21 @@ def draw_ennemi(ennemi):
     """
     Dessine l'ennemi
     """
-    topleft = ennemi.pos
-    taille= ennemi.taille
-    couleur = (150,10,150)
-    rect_ennemi = Rect(topleft,taille)
-    screen.draw.filled_rect(rect_ennemi,couleur)
+    if ennemi.taille[1] == 40 :
+        x = ennemi.pos[0]
+        y = ennemi.pos[1] + 5
+        e = Actor('ennemi1',topleft = (x,y)) 
+        e.draw()
+    if ennemi.taille[1] == 30 :
+        x = ennemi.pos[0]
+        y = ennemi.pos[1] + 5
+        e = Actor('ennemi2',topleft = (x,y)) 
+        e.draw()
+    if ennemi.taille[1] == 90 :
+        x = ennemi.pos[0]
+        y = ennemi.pos[1] + 5
+        e = Actor('ennemi3',topleft = (x,y)) 
+        e.draw()
 
 def draw_boss(boss : list):
     """
@@ -385,7 +395,10 @@ def draw_boss(boss : list):
         y = boss.pos[1] 
         b = Actor('roi_gluant', topleft = (x,y))
         b.draw()
-
+    if boss.name == "Gluant_Bulle" :
+        pass
+    if boss.name == "Agluantin" :
+        pass
 def draw_decor(decor):
     draw_contour(decor)
     x , y = decor.get_pos()
@@ -529,7 +542,7 @@ w = 0
 v = 0
 count_frame2 = 0
 count_frame = 0
-stage = 5
+stage = 1
 monde = 3
 tirs_ennemis = []
 pos_laser = None
