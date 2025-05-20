@@ -205,7 +205,7 @@ Levels(
 	Decors(1520, 780, 160, 1000, 'decor','bloc'),	
 	Decors(1680, 780, 160, 1000, 'decor','bloc'),
 	Decors(1840, 700, 160, 1000, 'decor','bloc')]
-	,[Boss([1680,400],(80,400),"Roi_Gluant", pv= 250, atk_cac =15 )],
+	,[Boss([1680,400],(80,430),"Roi_Gluant", pv= 250, atk_cac =15 )],
 	boss = True
 	)
 ]
@@ -333,8 +333,9 @@ def ajuste_niveaux_boss(levels,pos):
 
 
 nouveau_lvl = [
-niveaux[4]
+niveaux_boss[0], niveaux[4]
 ]
+# nouveau_lvl[1].decalage(0)
 
 
 decors_de_base = [Decors(-80,700,80,1000,"decor",'bloc'),Decors(1840,700,160,1000,"decor",'bloc')]
