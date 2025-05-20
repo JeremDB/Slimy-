@@ -32,8 +32,12 @@ Les différentes étapes à suivre pour créer le jeu !!
   Faire s'arrêter le jeu et lancer un combat de boss épique 
 
      - Jérémie : A fait le scrolling et l'arrêt sur le boss.
+     - Louis : A réfléchis au paterne des boss et les a dessiner 
+     - Sarah : A créé les tirs et a dessiner les ennemies 
 
 étapes 4 // 
   Faire un HUD pofiner et un écran de démarrage etc...
+
+     - Louis : a fait les écran menu et mort. A fait pause avec l'aide de Sarah
 
 
