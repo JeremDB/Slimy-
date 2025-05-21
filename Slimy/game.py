@@ -866,7 +866,7 @@ def init_highscore():
   return score.read()
 
 def check_keys():
-    global count_frame,force_gravite,boss_kill,etat_game,player,stage,monde,levels, tirs_ennemis, bulles
+    global count_frame,force_gravite,boss_kill,etat_game,player,stage,monde,levels, tirs_ennemis, bulles, score 
     """
     Verifie les touches enfoncée 
     Echap pour quitter le jeu
@@ -926,6 +926,7 @@ def check_keys():
             etat_game = "jeu"
             tirs_ennemis = []
             bulles = []
+            score = 0.0
         
 # Globals
 
