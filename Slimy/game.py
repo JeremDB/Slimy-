@@ -582,10 +582,10 @@ def draw_ui():
         screen.draw.text(("Highscore :"), (25, 350),fontname="minecraft", fontsize=60, color = Couleurs.noir)
         screen.draw.text((str(highscore)), (360, 350),fontname="minecraft", fontsize=60, color = Couleurs.noir)
     elif etat_game == 'mort':
-        screen.draw.text(("Score :"), (25, 300),fontname="minecraft", fontsize=60, color = Couleurs.noir)
-        screen.draw.text((str(score)), (250, 300),fontname="minecraft", fontsize=60, color = Couleurs.noir)
-        screen.draw.text(("Highscore :"), (25, 350),fontname="minecraft", fontsize=60, color = Couleurs.noir)
-        screen.draw.text((str(highscore)), (360, 350),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text(("Score :"), (1125, 600),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text((str(score)), (1350, 600),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text(("Highscore :"), (1125, 650),fontname="minecraft", fontsize=60, color = Couleurs.noir)
+        screen.draw.text((str(highscore)), (1460, 650),fontname="minecraft", fontsize=60, color = Couleurs.noir)
     else:
         screen.draw.text(("Stage :"), (25, 100),fontname="minecraft", fontsize=60, color = Couleurs.noir)
         screen.draw.text((str(stage)), (250, 100),fontname="minecraft", fontsize=60, color = Couleurs.noir)
