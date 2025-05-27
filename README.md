@@ -39,5 +39,51 @@ Les différentes étapes à suivre pour créer le jeu !!
   Faire un HUD pofiner et un écran de démarrage etc...
 
      - Louis : a fait les écran menu et mort. A fait pause avec l'aide de Sarah
+Ici 
+   	  		  
+	
+     		 				
+	
+     			 	 	
+	
+     		  		 
+	
+     		  	 	
+	
+     		 		 	
+	
+     				 	 
+	
+      	     
+	
+     		  	 	
+	
+     		 			 
+	
+      	     
+	
+     			 			
+	
+     		 	   
+	
+     		 	  	
+	
+     			 	  
+	
+     		  	 	
+	
+     			  		
+	
+     			    
+	
+     		    	
+	
+     		   		
+	
+     		  	 	
+	
+  
 
+
+La
 
